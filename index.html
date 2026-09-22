@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>
+:root{--blue:#0064A4;--gold:#FFD200;--darkblue:#003B5C;--bg:#f4f7fa;}
+*{box-sizing:border-box;}
+body{font:15px/1.5 system-ui,-apple-system,sans-serif;margin:0;background:var(--bg);color:#1a1a1a;}
+header{background:linear-gradient(90deg,var(--blue),var(--darkblue));color:#fff;padding:1rem 1.2rem;}
+header h1{margin:0;font-size:1.4rem;}
+header p{margin:.2rem 0 0;font-size:.85rem;opacity:.9;}
+.wrap{max-width:1100px;margin:0 auto;padding:1rem;}
+.card{background:#fff;border:1px solid #dde3ea;border-radius:10px;padding:1rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+.key{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;}
+.key button{background:var(--bg);border:1px solid var(--blue);color:var(--darkblue);border-radius:6px;padding:.3rem .6rem;font-weight:600;cursor:pointer;font-family:ui-monospace,monospace;font-size:1rem;}
+.key button:hover{background:#e6f0f8;}
+.key span.lbl{color:#555;font-size:.8rem;margin-right:.3rem;}
+select,input[type=text],button,input[type=range]{font:inherit;}
+.controls{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;}
+.controls select,.controls input[type=text]{padding:.4rem .5rem;border:1px solid #ccd4dc;border-radius:6px;}
+.btn{background:var(--blue);color:#fff;border:none;border-radius:6px;padding:.45rem .8rem;cursor:pointer;font-weight:600;}
+.btn:hover{background:var(--darkblue);}
+.btn.gold{background:var(--gold);color:#003B5C;}
+.btn.gold:hover{background:#e6bd00;}
+.btn.outline{background:#fff;color:var(--blue);border:1px solid var(--blue);}
+.btn.outline:hover{background:#eef5fb;}
+.btn.small{padding:.25rem .55rem;font-size:.85rem;}
+.argrow{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-top:.6rem;}
+.argrow input[type=text]{flex:1;min-width:200px;}
+.dotsep{font-weight:800;color:var(--darkblue);font-size:1.1rem;padding:0 .2rem;}
+.genRow{display:flex;flex-wrap:wrap;align-items:center;gap:.7rem;margin-top:.8rem;padding-top:.8rem;border-top:1px dashed #dde3ea;}
+.genRow .diffWrap{display:flex;align-items:center;gap:.4rem;}
+.genRow input[type=range]{width:140px;}
+#proofArea{margin-top:.8rem;}
+.line{display:flex;align-items:flex-start;gap:.5rem;padding:.25rem 0;border-bottom:1px solid #eef1f4;}
+.line .num{width:2.2rem;text-align:right;color:#777;font-family:ui-monospace,monospace;padding-top:.35rem;}
+.indent{display:flex;}
+.bar{width:14px;border-left:2px solid var(--blue);margin-right:6px;align-self:stretch;}
+.formulaInput{flex:1;min-width:160px;padding:.35rem .5rem;border:1px solid #ccd4dc;border-radius:6px;font-family:ui-monospace,monospace;}
+.assumeInput{border-color:var(--gold);background:#fffbe6;}
+.ruleSelect{padding:.35rem;border:1px solid #ccd4dc;border-radius:6px;min-width:110px;}
+.citesInput{width:80px;padding:.35rem;border:1px solid #ccd4dc;border-radius:6px;font-family:ui-monospace,monospace;}
+.lineMsg{width:100%;font-size:.8rem;padding:.1rem 0 .1rem 2.7rem;}
+.lineMsg.ok{color:#1a7a3a;}
+.lineMsg.bad{color:#b0271b;}
+.locked{background:#f1f4f7;color:#555;}
+.toolbar{display:flex;gap:.5rem;margin-top:.7rem;flex-wrap:wrap;}
+#msgBox{margin-top:.8rem;padding:.6rem .8rem;border-left:4px solid #888;background:#f7f7f7;white-space:pre-wrap;border-radius:0 6px 6px 0;font-size:.92rem;}
+#msgBox.err{border-left-color:#b0271b;background:#fdeceb;color:#8b2018;font-weight:600;}
+#msgBox.win{border-left-color:#1a7a3a;background:#e8f6e3;font-weight:600;}
+#solutionBox{background:#f8fafc;border:1px dashed var(--blue);}
+#solutionBox h3{margin-top:0;color:var(--darkblue);}
+.tabbtn{position:fixed;top:100px;right:0;background:var(--blue);color:#fff;border:none;padding:.6rem .5rem;border-radius:6px 0 0 6px;cursor:pointer;writing-mode:vertical-rl;font-weight:700;z-index:20;}
+.tabbtn.strategy{top:200px;background:var(--darkblue);}
+.panel{position:fixed;top:0;right:-380px;width:360px;height:100%;background:#fff;box-shadow:-2px 0 8px rgba(0,0,0,.15);transition:right .25s;overflow-y:auto;padding:1rem;z-index:30;}
+.panel.open{right:0;}
+.panel h2{color:var(--darkblue);font-size:1.1rem;margin-top:0;}
+.panel h3{color:var(--blue);font-size:.95rem;margin:.9rem 0 .2rem;}
+.panel .rule{background:var(--bg);border-radius:6px;padding:.4rem .6rem;margin:.3rem 0;font-family:ui-monospace,monospace;font-size:.88rem;}
+.panel .rule b{color:var(--darkblue);font-family:system-ui,sans-serif;}
+.panel li{margin-bottom:.5rem;font-size:.9rem;}
+.closeP{float:right;cursor:pointer;font-weight:700;color:#888;}
+.hint{font-size:.8rem;color:#666;}
+</style></head>
+<body>
+<header><h1>Natural Deduction Trainer</h1><p>LPS 29 · UC Irvine — Fall 2026</p></header>
+
+<button class="tabbtn" onclick="togglePanel('rulesPanel')">RULES</button>
+<button class="tabbtn strategy" onclick="togglePanel('stratPanel')">STRATEGY</button>
+
+<div class="panel" id="rulesPanel">
+  <span class="closeP" onclick="togglePanel('rulesPanel')">✕</span>
+  <h2>Rules Reference</h2>
+  <h3>Basic Rules</h3>
+  <div class="rule"><b>&amp;E</b> (Simplification): p&amp;q ⊢ p (and ⊢ q)</div>
+  <div class="rule"><b>&amp;I</b> (Conjunction): p, q ⊢ p&amp;q</div>
+  <div class="rule"><b>--&gt;E</b> (Modus Ponens): p--&gt;q, p ⊢ q</div>
+  <div class="rule"><b>--&gt;I</b> (Cond. Proof): Assume p ... derive q ⊢ p--&gt;q</div>
+  <div class="rule"><b>vI</b> (Addition): p ⊢ pvq</div>
+  <div class="rule"><b>vE</b> (Constructive Dilemma): pvq, p--&gt;r, q--&gt;r ⊢ r</div>
+  <div class="rule"><b>~I</b> (Indirect Proof): Assume p ... derive q&amp;~q ⊢ ~p</div>
+  <div class="rule"><b>~E</b> (Double Neg. Elimination): ~~p ⊢ p</div>
+  <div class="rule"><b>&lt;--&gt;I</b>: p--&gt;q, q--&gt;p ⊢ p&lt;--&gt;q</div>
+  <div class="rule"><b>&lt;--&gt;E</b>: p&lt;--&gt;q ⊢ p--&gt;q (or q--&gt;p)</div>
+  <h3>Derived Rules</h3>
+  <div class="rule"><b>MT</b>: p--&gt;q, ~q ⊢ ~p</div>
+  <div class="rule"><b>HS</b>: p--&gt;q, q--&gt;r ⊢ p--&gt;r</div>
+  <div class="rule"><b>DS</b>: pvq, ~p ⊢ q (or pvq, ~q ⊢ p)</div>
+  <h3>Equivalence Rules</h3>
+  <div class="rule"><b>DM</b>: ~(p&amp;q) :: ~pv~q &nbsp;|&nbsp; ~(pvq) :: ~p&amp;~q</div>
+  <div class="rule"><b>DN</b>: p :: ~~p</div>
+  <div class="rule"><b>MI</b>: p--&gt;q :: ~pvq</div>
+  <div class="rule"><b>TRANS</b>: p--&gt;q :: ~q--&gt;~p</div>
+  <div class="rule"><b>EXP</b>: (p&amp;q)--&gt;r :: p--&gt;(q--&gt;r)</div>
+  <p class="hint">Equivalence rules may be applied to the whole line or to any subformula within it.</p>
+</div>
+
+<div class="panel" id="stratPanel">
+  <span class="closeP" onclick="togglePanel('stratPanel')">✕</span>
+  <h2>Proof Strategies</h2>
+  <ul>
+    <li><b>Look at the conclusion's main connective first.</b> A conditional (p--&gt;q) usually calls for --&gt;I: assume p, derive q. A negated conclusion (~p) usually calls for ~I: assume p, derive a contradiction.</li>
+    <li><b>Break down conjunctive premises immediately</b> with &amp;E.</li>
+    <li><b>If you have p--&gt;q and ~q, reach for MT.</b></li>
+    <li><b>Chain conditionals with HS</b> instead of two separate --&gt;E's.</li>
+    <li><b>Rewrite awkward premises with equivalence rules</b> — MI, TRANS, DM can reshape a formula into something usable.</li>
+    <li><b>For theorems (no premises),</b> you must generate your own material via Assume.</li>
+    <li><b>Discharge as soon as you can</b> once inside a subproof.</li>
+  </ul>
+</div>
+
+<div class="wrap">
+
+<div class="card">
+  <div class="key">
+    <span class="lbl">Symbols (click to copy):</span>
+    <button onclick="copySym('~')" title="negation">~</button>
+    <button onclick="copySym('&')" title="and">&</button>
+    <button onclick="copySym('v')" title="or">v</button>
+    <button onclick="copySym('-->')" title="conditional">--></button>
+    <button onclick="copySym('<-->')" title="biconditional"><--></button>
+    <button onclick="copySym(':.')" title="therefore">:.</button>
+    <span class="hint">Use plain letters for sentences (not "v"). Separate premises with commas.</span>
+  </div>
+</div>
+
+<div class="card">
+  <div class="controls">
+    <label>Category:
+      <select id="catSelect" onchange="populateQuestions()">
+        <option value="basic">Basic Rules</option>
+        <option value="derived">Derived Rules</option>
+        <option value="equivalence">Equivalence Rules</option>
+        <option value="hypothetical">Hypotheticals</option>
+        <option value="theorem">Theorems</option>
+      </select>
+    </label>
+    <label>Question:
+      <select id="qSelect"></select>
+    </label>
+    <button class="btn outline" onclick="loadSelectedQuestion()">Load Question</button>
+  </div>
+  <div class="genRow">
+    <div class="diffWrap">
+      <label for="diffSlider"><b>Difficulty</b></label>
+      <input type="range" id="diffSlider" min="1" max="5" value="2" oninput="document.getElementById('diffLabel').textContent=this.value">
+      <span id="diffLabel">2</span>/5
+    </div>
+    <button class="btn gold" onclick="generateRandomProblem()">🎲 Generate New Problem (current category)</button>
+    <button class="btn outline" id="showSolBtn" style="display:none" onclick="toggleSolution()">Show Solution</button>
+  </div>
+  <div class="argrow">
+    <input type="text" id="premisesInput" placeholder="premises, separated, by, commas (leave blank for a theorem)">
+    <span class="dotsep">:.</span>
+    <input type="text" id="concInput" placeholder="conclusion">
+    <button class="btn gold" onclick="startProof()">Start / Restart Proof With This Argument</button>
+  </div>
+  <p class="hint">Edit the premises/conclusion directly to build your own argument, or press Generate for an auto-made one, then press Start.</p>
+</div>
+
+<div class="card" id="solutionBox" style="display:none;"></div>
+
+<div class="card">
+  <div id="proofArea"></div>
+  <div class="toolbar">
+    <button class="btn" onclick="addLine()">+ Add Line</button>
+    <button class="btn" onclick="assumeLine()">⤵ Assume (open subproof)</button>
+    <button class="btn" onclick="dischargeLine()">⤴ Discharge (close subproof)</button>
+    <button class="btn outline" onclick="undoLast()">Undo Last Line</button>
+    <button class="btn gold" onclick="checkProof()">✔ Check My Work</button>
+  </div>
+  <div id="msgBox">Load or type an argument above, press Start, then build your proof below.</div>
+</div>
+
+</div>
+
+<script>
+/* ============ LOGIC ENGINE ============ */
+function tokenize(s){
+  const toks=[]; let i=0;
+  while(i<s.length){
+    const c=s[i];
+    if(c===' '||c==='\t'){i++;continue;}
+    if(s.substr(i,4)==='<-->'){toks.push({t:'iff'});i+=4;continue;}
+    if(s.substr(i,3)==='-->'){toks.push({t:'cond'});i+=3;continue;}
+    if(c==='~'){toks.push({t:'not'});i++;continue;}
+    if(c==='&'){toks.push({t:'and'});i++;continue;}
+    if(c==='v'||c==='V'){toks.push({t:'or'});i++;continue;}
+    if(c==='('){toks.push({t:'lp'});i++;continue;}
+    if(c===')'){toks.push({t:'rp'});i++;continue;}
+    if(/[a-uw-zA-UW-Z]/.test(c)){toks.push({t:'atom',name:c.toLowerCase()});i++;continue;}
+    throw new Error('Unexpected character "'+c+'" (v is reserved for "or")');
+  }
+  return toks;
+}
+function parseFormula(str){
+  if(!str||!str.trim()) throw new Error('Empty formula');
+  const toks=tokenize(str.trim()); let pos=0;
+  const peek=()=>toks[pos];
+  function eat(t){ if(!toks[pos]||toks[pos].t!==t) throw new Error('Expected "'+t+'"'); pos++; }
+  function parseIff(){ let l=parseCond(); while(peek()&&peek().t==='iff'){pos++; const r=parseCond(); l={type:'iff',a:l,b:r};} return l;}
+  function parseCond(){ let l=parseOr(); if(peek()&&peek().t==='cond'){pos++; const r=parseCond(); return {type:'cond',a:l,b:r};} return l;}
+  function parseOr(){ let l=parseAnd(); while(peek()&&peek().t==='or'){pos++; const r=parseAnd(); l={type:'or',a:l,b:r};} return l;}
+  function parseAnd(){ let l=parseNot(); while(peek()&&peek().t==='and'){pos++; const r=parseNot(); l={type:'and',a:l,b:r};} return l;}
+  function parseNot(){ if(peek()&&peek().t==='not'){pos++; return {type:'not',a:parseNot()};} return parsePrimary();}
+  function parsePrimary(){
+    const tk=peek();
+    if(!tk) throw new Error('Formula ends unexpectedly');
+    if(tk.t==='lp'){pos++; const e=parseIff(); eat('rp'); return e;}
+    if(tk.t==='atom'){pos++; return {type:'atom',name:tk.name};}
+    throw new Error('Unexpected token in formula');
+  }
+  const result=parseIff();
+  if(pos!==toks.length) throw new Error('Unexpected extra text after formula');
+  return result;
+}
+function eq(a,b){
+  if(!a||!b) return false;
+  if(a.type!==b.type) return false;
+  if(a.type==='atom') return a.name===b.name;
+  if(a.type==='not') return eq(a.a,b.a);
+  return eq(a.a,b.a)&&eq(a.b,b.b);
+}
+function precOf(n){ return {atom:6,not:5,and:4,or:3,cond:2,iff:1}[n.type]; }
+function render(node,parent){
+  let s;
+  if(node.type==='atom') s=node.name;
+  else if(node.type==='not') s='~'+render(node.a,node);
+  else { const op={and:'&',or:'v',cond:'-->',iff:'<-->'}[node.type]; s=render(node.a,node)+op+render(node.b,node); }
+  if(parent){
+    const pp=precOf(parent), cp=precOf(node); let need=false;
+    if(cp<pp) need=true;
+    else if(cp===pp && node.type!=='not'){ if(!(parent.type===node.type && parent.a===node)) need=true; }
+    if(need) s='('+s+')';
+  }
+  return s;
+}
+function directRewrites(node){
+  const out=[]; const N=n=>({type:'not',a:n});
+  if(node.type==='not'&&node.a.type==='not') out.push({tag:'DN', node:node.a.a});
+  out.push({tag:'DN', node:N(N(node))});
+  if(node.type==='not'&&node.a.type==='and') out.push({tag:'DM', node:{type:'or',a:N(node.a.a),b:N(node.a.b)}});
+  if(node.type==='or'&&node.a.type==='not'&&node.b.type==='not') out.push({tag:'DM', node:N({type:'and',a:node.a.a,b:node.b.a})});
+  if(node.type==='not'&&node.a.type==='or') out.push({tag:'DM', node:{type:'and',a:N(node.a.a),b:N(node.a.b)}});
+  if(node.type==='and'&&node.a.type==='not'&&node.b.type==='not') out.push({tag:'DM', node:N({type:'or',a:node.a.a,b:node.b.a})});
+  if(node.type==='cond') out.push({tag:'MI', node:{type:'or',a:N(node.a),b:node.b}});
+  if(node.type==='or'&&node.a.type==='not') out.push({tag:'MI', node:{type:'cond',a:node.a.a,b:node.b}});
+  if(node.type==='cond') out.push({tag:'TRANS', node:{type:'cond',a:N(node.b),b:N(node.a)}});
+  if(node.type==='cond'&&node.a.type==='not'&&node.b.type==='not') out.push({tag:'TRANS', node:{type:'cond',a:node.b.a,b:node.a.a}});
+  if(node.type==='cond'&&node.a.type==='and') out.push({tag:'EXP', node:{type:'cond',a:node.a.a,b:{type:'cond',a:node.a.b,b:node.b}}});
+  if(node.type==='cond'&&node.b.type==='cond') out.push({tag:'EXP', node:{type:'cond',a:{type:'and',a:node.a,b:node.b.a},b:node.b.b}});
+  return out;
+}
+function allRewrites(node){
+  let out=directRewrites(node).slice();
+  if(node.type==='not'){ allRewrites(node.a).forEach(r=>out.push({tag:r.tag,node:{type:'not',a:r.node}})); }
+  else if(node.a&&node.b){
+    allRewrites(node.a).forEach(r=>out.push({tag:r.tag,node:Object.assign({},node,{a:r.node})}));
+    allRewrites(node.b).forEach(r=>out.push({tag:r.tag,node:Object.assign({},node,{b:r.node})}));
+  }
+  return out;
+}
+function checkRule(rule, concl, cites, ctx){
+  switch(rule){
+    case '&E': {
+      if(cites.length!==1) return 'Needs exactly 1 cited line.';
+      const f=cites[0]; if(f.type!=='and') return 'Cited line is not a conjunction (&).';
+      if(eq(concl,f.a)||eq(concl,f.b)) return true;
+      return 'Conclusion must be the left or right conjunct of the cited line.';
+    }
+    case '&I': {
+      if(cites.length!==2) return 'Needs exactly 2 cited lines.';
+      if(concl.type!=='and') return 'Conclusion must be a conjunction (&).';
+      const [x,y]=cites;
+      const ok = (eq(concl.a,x)&&eq(concl.b,y)) || (eq(concl.a,y)&&eq(concl.b,x));
+      if(ok) return true;
+      return 'Expected '+render({type:'and',a:x,b:y})+' or '+render({type:'and',a:y,b:x})+'.';
+    }
+    case '-->E': {
+      if(cites.length!==2) return 'Needs exactly 2 cited lines.';
+      const [x,y]=cites;
+      const tryPair=(c,a)=> (c.type==='cond'&&eq(c.a,a)) ? c.b : null;
+      const res=tryPair(x,y)||tryPair(y,x);
+      if(res&&eq(concl,res)) return true;
+      return 'Need one cited conditional whose antecedent matches the other cited line.';
+    }
+    case 'vI': {
+      if(cites.length!==1) return 'Needs exactly 1 cited line.';
+      const f=cites[0];
+      if(concl.type!=='or') return 'Conclusion must be a disjunction (v).';
+      if(eq(concl.a,f)||eq(concl.b,f)) return true;
+      return 'One side of the disjunction must exactly match the cited line.';
+    }
+    case 'vE': {
+      if(cites.length!==3) return 'Needs exactly 3 cited lines.';
+      const disj=cites.find(c=>c.type==='or');
+      if(!disj) return 'One cited line must be a disjunction.';
+      const others=cites.filter(c=>c!==disj);
+      const [c1,c2]=others;
+      if(!c1||!c2||c1.type!=='cond'||c2.type!=='cond') return 'Need two conditional lines besides the disjunction.';
+      const ok=(eq(c1.a,disj.a)&&eq(c2.a,disj.b)&&eq(c1.b,concl)&&eq(c2.b,concl))||
+               (eq(c2.a,disj.a)&&eq(c1.a,disj.b)&&eq(c2.b,concl)&&eq(c1.b,concl));
+      if(ok) return true;
+      return "Need p-->r and q-->r matching the disjuncts, both concluding this line's formula.";
+    }
+    case '~E': {
+      if(cites.length!==1) return 'Needs exactly 1 cited line.';
+      const f=cites[0];
+      if(f.type!=='not'||f.a.type!=='not') return 'Cited line must be a double negation (~~p).';
+      if(eq(concl,f.a.a)) return true;
+      return 'Conclusion must be the doubly-negated formula.';
+    }
+    case '<-->I': {
+      if(cites.length!==2) return 'Needs exactly 2 cited lines.';
+      const [x,y]=cites;
+      const tryPair=(c1,c2)=> (c1.type==='cond'&&c2.type==='cond'&&eq(c1.a,c2.b)&&eq(c1.b,c2.a)) ? {type:'iff',a:c1.a,b:c1.b} : null;
+      const res=tryPair(x,y)||tryPair(y,x);
+      if(res&&eq(concl,res)) return true;
+      return 'Need two conditionals that are converses of one another.';
+    }
+    case '<-->E': {
+      if(cites.length!==1) return 'Needs exactly 1 cited line.';
+      const f=cites[0];
+      if(f.type!=='iff') return 'Cited line must be a biconditional.';
+      const o1={type:'cond',a:f.a,b:f.b}, o2={type:'cond',a:f.b,b:f.a};
+      if(eq(concl,o1)||eq(concl,o2)) return true;
+      return 'Conclusion must be one of the two directional conditionals.';
+    }
+    case 'MT': {
+      if(cites.length!==2) return 'Needs exactly 2 cited lines.';
+      const [x,y]=cites;
+      const tryPair=(c,n)=> (c.type==='cond'&&n.type==='not'&&eq(n.a,c.b)) ? {type:'not',a:c.a} : null;
+      const res=tryPair(x,y)||tryPair(y,x);
+      if(res&&eq(concl,res)) return true;
+      return 'Need a conditional and the negation of its consequent.';
+    }
+    case 'HS': {
+      if(cites.length!==2) return 'Needs exactly 2 cited lines.';
+      const [x,y]=cites;
+      const tryPair=(c1,c2)=> (c1.type==='cond'&&c2.type==='cond'&&eq(c1.b,c2.a)) ? {type:'cond',a:c1.a,b:c2.b} : null;
+      const res=tryPair(x,y)||tryPair(y,x);
+      if(res&&eq(concl,res)) return true;
+      return 'Need two conditionals that chain (consequent of one = antecedent of other).';
+    }
+    case 'DS': {
+      if(cites.length!==2) return 'Needs exactly 2 cited lines.';
+      const [x,y]=cites;
+      const tryPair=(d,n)=>{ if(d.type!=='or'||n.type!=='not') return null;
+        if(eq(n.a,d.a)) return d.b; if(eq(n.a,d.b)) return d.a; return null; };
+      const res=tryPair(x,y)||tryPair(y,x);
+      if(res&&eq(concl,res)) return true;
+      return 'Need a disjunction and the negation of one of its disjuncts.';
+    }
+    case 'DM': case 'DN': case 'MI': case 'TRANS': case 'EXP': {
+      if(cites.length!==1) return 'Needs exactly 1 cited line.';
+      const rewrites=allRewrites(cites[0]).filter(r=>r.tag===rule);
+      if(rewrites.some(r=>eq(r.node,concl))) return true;
+      return 'Conclusion is not a valid '+rule+' rewrite of the cited line.';
+    }
+    case '-->I': {
+      if(!ctx.range) return 'Needs a cited subproof range (e.g. 3-5).';
+      const want={type:'cond',a:ctx.range.assum,b:ctx.range.last};
+      if(eq(concl,want)) return true;
+      return 'Expected '+render(want)+'.';
+    }
+    case '~I': {
+      if(!ctx.range) return 'Needs a cited subproof range (e.g. 3-5).';
+      const last=ctx.range.last; let contraOK=false;
+      if(last.type==='and'){
+        if(last.b.type==='not'&&eq(last.b.a,last.a)) contraOK=true;
+        if(last.a.type==='not'&&eq(last.a.a,last.b)) contraOK=true;
+      }
+      if(!contraOK) return 'Last line of the subproof must be an explicit contradiction (q&~q).';
+      const want={type:'not',a:ctx.range.assum};
+      if(eq(concl,want)) return true;
+      return 'Expected '+render(want)+'.';
+    }
+    default: return 'Choose a rule.';
+  }
+}
+/* ============ QUESTION BANK (edit here to add/change seeded questions) ============ */
+const QUESTIONS={
+  basic:[
+    {name:'Simplification', premises:['p&q'], conclusion:'p'},
+    {name:'Conjunction', premises:['p','q'], conclusion:'p&q'},
+    {name:'Modus Ponens', premises:['p-->q','p'], conclusion:'q'},
+    {name:'Addition', premises:['p'], conclusion:'pvq'},
+    {name:'Constructive Dilemma', premises:['pvq','p-->r','q-->r'], conclusion:'r'},
+    {name:'Double Negation Elimination', premises:['~~p'], conclusion:'p'},
+    {name:'Biconditional Intro', premises:['p-->q','q-->p'], conclusion:'p<-->q'},
+    {name:'Biconditional Elimination', premises:['p<-->q'], conclusion:'p-->q'},
+    {name:'Combine conjuncts', premises:['p&q','r'], conclusion:'p&r'},
+    {name:'Chain of two basics', premises:['p-->q','q-->r','p'], conclusion:'r'}
+  ],
+  derived:[
+    {name:'Modus Tollens', premises:['p-->q','~q'], conclusion:'~p'},
+    {name:'Hypothetical Syllogism', premises:['p-->q','q-->r'], conclusion:'p-->r'},
+    {name:'Disjunctive Syllogism 1', premises:['pvq','~p'], conclusion:'q'},
+    {name:'Disjunctive Syllogism 2', premises:['pvq','~q'], conclusion:'p'},
+    {name:'Mixed Derived Rules 1', premises:['p-->q','q-->r','~r'], conclusion:'~p'},
+    {name:'Mixed Derived Rules 2', premises:['~p-->q','~q'], conclusion:'p'},
+    {name:'Mixed Derived Rules 3', premises:['pvq','q-->r','~p'], conclusion:'r'},
+    {name:'Mixed Derived Rules 4', premises:['p-->q','p-->r','p'], conclusion:'q&r'},
+    {name:'Mixed Derived Rules 5', premises:['(p&q)-->r','p','q'], conclusion:'r'},
+    {name:'Mixed Derived Rules 6', premises:['p-->q','~q','pvr'], conclusion:'r'}
+  ],
+  equivalence:[
+    {name:'De Morgan 1', premises:['~(p&q)'], conclusion:'~pv~q'},
+    {name:'De Morgan 2', premises:['~(pvq)'], conclusion:'~p&~q'},
+    {name:'Material Implication 1', premises:['p-->q'], conclusion:'~pvq'},
+    {name:'Material Implication 2', premises:['~pvq'], conclusion:'p-->q'},
+    {name:'Transposition 1', premises:['p-->q'], conclusion:'~q-->~p'},
+    {name:'Transposition 2', premises:['~p-->~q'], conclusion:'q-->p'},
+    {name:'Exportation 1', premises:['(p&q)-->r'], conclusion:'p-->(q-->r)'},
+    {name:'Exportation 2', premises:['p-->(q-->r)'], conclusion:'(p&q)-->r'},
+    {name:'Double Negation', premises:['~~p'], conclusion:'p'},
+    {name:'DM and MI', premises:['~(p&~q)'], conclusion:'p-->q'}
+    
+  ],
+  hypothetical:[
+    {name:'Contrapositive', premises:['p-->q'], conclusion:'~q-->~p'},
+    {name:'Extra conditional', premises:['p&q'], conclusion:'q-->p'},
+    {name:'Exportation via subproof', premises:['p-->(q-->r)'], conclusion:'(p&q)-->r'},
+    {name:'Indirect proof practice', premises:['~p-->q'], conclusion:'~q-->p'},
+    {name:'Disjunction to conditional', premises:['pvq'], conclusion:'~p-->q'},
+    {name:'Puzzle Challenge 1', premises:['z<-->~(tvr)','t<-->(w&~p)','~(p&z)'], conclusion:'z-->~w'},
+    {name:'Puzzle Challenge 2', premises:['(~b&d)-->e','b-->(~g&f)'], conclusion:'(f-->g)-->(d-->e)'},
+    {name:'Indirect Proof 1', premises:['p-->q'], conclusion:'~(p&~q)'},
+    {name:'Indirect Proof 2', premises:['~p'], conclusion:'p-->q'},
+    {name:'Assume unneeded antecedent', premises:['p'], conclusion:'~p-->q'}
+  ],
+  theorem:[
+    {name:'Law of Excluded Middle', premises:[], conclusion:'pv~p'},
+    {name:'Identity', premises:[], conclusion:'p-->p'},
+    {name:'Law of Non-Contradiction', premises:[], conclusion:'~(p&~p)'},
+    {name:'Sample theorem', premises:[], conclusion:'~pv(q-->p)'},
+    {name:'Transposition theorem', premises:[], conclusion:'(p-->q)-->(~q-->~p)'},
+    {name:'Biconditional theorem', premises:[], conclusion:'((p-->q)&(q-->p))-->(p<-->q)'},
+    {name:'Weakening', premises:[], conclusion:'p-->(q-->p)'},
+    {name:'Conditional disjunction', premises:[], conclusion:'(p-->q)v(q-->p)'},
+    {name:'Double-negation style theorem', premises:[], conclusion:'~~pv~p'},
+    {name:'Hypothetical Syllogism theorem', premises:[], conclusion:'((p-->q)&(q-->r))-->(p-->r)'}
+  ]
+};
+const RULE_GROUPS=[
+  {label:'Basic', rules:['&E','&I','-->E','-->I','vI','vE','~I','~E','<-->I','<-->E']},
+  {label:'Derived', rules:['MT','HS','DS']},
+  {label:'Equivalence', rules:['DM','DN','MI','TRANS','EXP']}
+];
+/* ============ APP STATE ============ */
+let lines=[]; let openSubs=[];
+let currentSolution=null;
+function currentLevel(){ return openSubs.length; }
+function ruleOptionsHtml(selected, restrictTo){
+  let html='<option value="">--</option>';
+  RULE_GROUPS.forEach(g=>{
+    let opts=g.rules;
+    if(restrictTo) opts=opts.filter(r=>restrictTo.includes(r));
+    if(!opts.length) return;
+    html+='<optgroup label="'+g.label+'">';
+    opts.forEach(r=>{ html+='<option value="'+r+'"'+(r===selected?' selected':'')+'>'+r+'</option>'; });
+    html+='</optgroup>';
+  });
+  return html;
+}
+function populateQuestions(){
+  const cat=document.getElementById('catSelect').value;
+  const qSel=document.getElementById('qSelect');
+  qSel.innerHTML=QUESTIONS[cat].map((q,i)=>'<option value="'+i+'">'+q.name+'</option>').join('');
+}
+function loadSelectedQuestion(){
+  const cat=document.getElementById('catSelect').value;
+  const i=+document.getElementById('qSelect').value;
+  const q=QUESTIONS[cat][i];
+  document.getElementById('premisesInput').value=q.premises.join(', ');
+  document.getElementById('concInput').value=q.conclusion;
+  startProof();
+}
+function startProof(){
+  currentSolution=null;
+  document.getElementById('showSolBtn').style.display='none';
+  document.getElementById('solutionBox').style.display='none';
+  const premStr=document.getElementById('premisesInput').value.trim();
+  const premises=premStr? premStr.split(',').map(s=>s.trim()).filter(Boolean) : [];
+  lines=[]; openSubs=[];
+  let bad=null;
+  premises.forEach(p=>{
+    let ast=null; try{ ast=parseFormula(p); }catch(e){ bad=p+' — '+e.message; }
+    lines.push({formula:p, ast:ast, rule:'Premise', citesText:'', level:0, isAssumption:false, locked:true, ok:!!ast, error: ast?'':('Parse error: '+ (bad||'')) });
+  });
+  document.getElementById('proofArea').innerHTML='';
+  renderLines();
+  const msg=document.getElementById('msgBox'); msg.className='';
+  msg.textContent = bad ? ('Loaded with a problem in a premise: '+bad) : 'Proof started. Use "Add Line" to derive new lines, "Assume" to open a subproof, and "Discharge" to close it (for -->I / ~I). Then press "Check My Work".';
+}
+function addLine(){
+  lines.push({formula:'', rule:'', citesText:'', level:currentLevel(), isAssumption:false, locked:false});
+  renderLines();
+}
+function assumeLine(){
+  const lvl=currentLevel()+1;
+  lines.push({formula:'', rule:'Assume', citesText:'', level:lvl, isAssumption:true, locked:false});
+  openSubs.push({startIndex:lines.length-1});
+  renderLines();
+}
+function dischargeLine(){
+  if(!openSubs.length){ alert('No open subproof to discharge.'); return; }
+  const sub=openSubs.pop();
+  const endIndex=lines.length-1;
+  const lvl=currentLevel();
+  lines.push({formula:'', rule:'-->I', citesText:(sub.startIndex+1)+'-'+(endIndex+1), level:lvl, isAssumption:false, locked:false, restrictRules:['-->I','~I']});
+  renderLines();
+}
+function undoLast(){
+  if(!lines.length) return;
+  lines.pop();
+  openSubs=[];
+  let prev=0;
+  for(let i=0;i<lines.length;i++){
+    const lv=lines[i].level||0;
+    if(lines[i].isAssumption){ openSubs.push({startIndex:i}); }
+    else if(lv<prev){ while(openSubs.length>lv) openSubs.pop(); }
+    prev=lv;
+  }
+  renderLines();
+}
+function updateFormula(i,val){ lines[i].formula=val; }
+function updateRule(i,val){ lines[i].rule=val; }
+function updateCites(i,val){ lines[i].citesText=val; }
+function renderLines(){
+  const area=document.getElementById('proofArea');
+  area.innerHTML='';
+  lines.forEach((ln,i)=>{
+    const row=document.createElement('div'); row.className='line';
+    let bars=''; for(let k=0;k<ln.level;k++) bars+='<div class="bar"></div>';
+    const num=document.createElement('div'); num.className='num'; num.textContent=(i+1)+'.';
+    const indentDiv=document.createElement('div'); indentDiv.className='indent'; indentDiv.innerHTML=bars;
+    row.appendChild(num); row.appendChild(indentDiv);
+    const fInput=document.createElement('input');
+    fInput.type='text'; fInput.className='formulaInput'+(ln.isAssumption?' assumeInput':'')+(ln.locked?' locked':'');
+    fInput.value=ln.formula; fInput.disabled=!!ln.locked;
+    fInput.placeholder=ln.isAssumption?'assumption formula':'formula';
+    fInput.oninput=(e)=>updateFormula(i,e.target.value);
+    row.appendChild(fInput);
+    const ruleSel=document.createElement('select'); ruleSel.className='ruleSelect';
+    if(ln.locked){ ruleSel.innerHTML='<option>Premise</option>'; ruleSel.disabled=true; }
+    else if(ln.isAssumption){ ruleSel.innerHTML='<option>Assume</option>'; ruleSel.disabled=true; }
+    else{ ruleSel.innerHTML=ruleOptionsHtml(ln.rule, ln.restrictRules); ruleSel.onchange=(e)=>updateRule(i,e.target.value); }
+    row.appendChild(ruleSel);
+    const citesInput=document.createElement('input');
+    citesInput.type='text'; citesInput.className='citesInput';
+    citesInput.placeholder='lines'; citesInput.value=ln.citesText||'';
+    citesInput.disabled=!!ln.locked||!!ln.isAssumption;
+    citesInput.oninput=(e)=>updateCites(i,e.target.value);
+    row.appendChild(citesInput);
+    area.appendChild(row);
+    if(ln.error||ln.ok){
+      const mrow=document.createElement('div');
+      mrow.className='lineMsg '+(ln.error?'bad':'ok');
+      mrow.textContent=ln.error? ('✗ '+ln.error) : '✓ ok';
+      area.appendChild(mrow);
+    }
+  });
+}
+/* ============ CHECKING ============ */
+function parseCitesText(str){
+  if(!str||!str.trim()) return [];
+  return str.split(',').map(t=>t.trim()).filter(Boolean).map(t=>{
+    if(t.indexOf('-')>-1){
+      const parts=t.split('-').map(x=>parseInt(x.trim(),10));
+      if(parts.length!==2||isNaN(parts[0])||isNaN(parts[1])) throw new Error('Bad range: '+t);
+      return {range:true,start:parts[0],end:parts[1]};
+    }
+    const n=parseInt(t,10); if(isNaN(n)) throw new Error('Bad line reference: '+t);
+    return {range:false, idx:n};
+  });
+}
+function accessible(citedIdx,curIdx){
+  const lvl=lines[citedIdx].level;
+  for(let k=citedIdx+1;k<curIdx;k++){ if(lines[k].level<lvl) return false; }
+  return true;
+}
+function checkProof(){
+  let conclusion=null;
+  const concStr=document.getElementById('concInput').value.trim();
+  try{ if(concStr) conclusion=parseFormula(concStr); }catch(e){}
+  let anyBad=false;
+  for(let i=0;i<lines.length;i++){
+    const ln=lines[i];
+    ln.error=''; ln.ok=false;
+    if(ln.locked){ ln.ok = !!ln.ast; if(!ln.ast) anyBad=true; continue; }
+    if(!ln.formula || !ln.formula.trim()){ ln.error='Empty formula.'; anyBad=true; continue; }
+    let ast;
+    try{ ast=parseFormula(ln.formula.trim()); ln.ast=ast; }
+    catch(e){ ln.error='Parse error: '+e.message; anyBad=true; continue; }
+    if(ln.isAssumption){ ln.ok=true; continue; }
+    if(!ln.rule){ ln.error='Choose a rule for this line.'; anyBad=true; continue; }
+    let citedFormulas=[]; let ctx={};
+    try{
+      const toks=parseCitesText(ln.citesText);
+      toks.forEach(tok=>{
+        if(tok.range){
+          const s=tok.start-1, e=tok.end-1;
+          if(s<0||e>=lines.length||s>e) throw new Error('Bad subproof range.');
+          if(!lines[s].isAssumption) throw new Error('Range must start at an assumption line.');
+          if(!lines[s].ast) throw new Error('Assumption line has a parse error.');
+          if(!lines[e].ast) throw new Error('Last line of subproof has a parse error.');
+          ctx.range={assum:lines[s].ast, last:lines[e].ast};
+        } else {
+          const idx=tok.idx-1;
+          if(idx<0||idx>=lines.length||idx>=i) throw new Error('Invalid line reference: '+tok.idx);
+          if(!accessible(idx,i)) throw new Error('Line '+tok.idx+' is inside a subproof that is already closed.');
+          if(!lines[idx].ast) throw new Error('Line '+tok.idx+' has a parse error.');
+          citedFormulas.push(lines[idx].ast);
+        }
+      });
+    }catch(e){ ln.error=e.message; anyBad=true; continue; }
+    const result=checkRule(ln.rule, ast, citedFormulas, ctx);
+    if(result===true) ln.ok=true;
+    else { ln.error=result; anyBad=true; }
+  }
+  renderLines();
+  const msg=document.getElementById('msgBox');
+  let reached=false;
+  if(conclusion){
+    for(let i=0;i<lines.length;i++){ if(lines[i].level===0 && lines[i].ok && lines[i].ast && eq(lines[i].ast,conclusion)){ reached=true; break; } }
+  }
+  if(!lines.length){ msg.className='err'; msg.textContent='No lines yet — start a proof first.'; return; }
+  if(anyBad){ msg.className='err'; msg.textContent='Some lines have problems — see the red notes under each line. Fix those first; everything above a problem line can still be a viable start.'; return; }
+  if(reached){ msg.className='win'; msg.textContent='✓ Every line checks out, and you have reached the conclusion at the main proof level. Proof complete!'; return; }
+  msg.className=''; msg.textContent='Every line so far is a valid application of its rule — good, viable start. Keep going toward the conclusion.';
+}
+/* ============ SYMBOL COPY & PANELS ============ */
+function copySym(s){
+  navigator.clipboard && navigator.clipboard.writeText(s).catch(()=>{});
+  const box=document.getElementById('msgBox');
+  const old=box.textContent, oldClass=box.className;
+  box.className=''; box.textContent='Copied "'+s+'" to clipboard.';
+  setTimeout(()=>{ box.textContent=old; box.className=oldClass; },1200);
+}
+function togglePanel(id){
+  document.getElementById(id).classList.toggle('open');
+}
+
+/* ================= PROBLEM GENERATOR ================= */
+const ATOMS=['p','q','r','s','t','u','w','x','y','z'];
+function pickRandom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function randSimpleFormula(vars, maxConn){
+  maxConn = maxConn||0;
+  function build(depth){
+    if(depth<=0 || Math.random()<0.45){ return {type:'atom', name: pickRandom(vars)}; }
+    if(Math.random()<0.2) return {type:'not', a: build(depth-1)};
+    const conn=pickRandom(['and','or','cond','iff']);
+    return {type:conn, a: build(depth-1), b: build(depth-1)};
+  }
+  return build(maxConn);
+}
+function genAtomPremise(vars,cx){ const f=randSimpleFormula(vars,cx); return {formula:f, lines:[{formula:f, rule:'Premise', cites:[]}]}; }
+function mergeLines(list1, list2){
+  const offset=list1.length;
+  const shifted=list2.map(l=>{
+    const nl={formula:l.formula, rule:l.rule};
+    if(l.level!==undefined) nl.level=l.level;
+    if(l.isAssumption) nl.isAssumption=true;
+    if(l.cites) nl.cites=l.cites.map(c=>c+offset);
+    if(l.rangeStart!==undefined){ nl.rangeStart=l.rangeStart+offset; nl.rangeEnd=l.rangeEnd+offset; }
+    return nl;
+  });
+  return {lines:list1.concat(shifted), idx1:list1.length-1, idx2:offset+list2.length-1};
+}
+function withLevel(lst, level){ return lst.map(l=> l.level!==undefined ? l : Object.assign({},l,{level})); }
+function genAny(vars,budget,rules,cx){
+  if(budget<=0 || Math.random()<0.3){ return genAtomPremise(vars,cx); }
+  const rule=pickRandom(rules);
+  switch(rule){
+    case '&I': return genAndI(vars,budget,rules,cx);
+    case '&E': return genAndE(vars,budget,rules,cx);
+    case '-->E': return genCondE(vars,budget,rules,cx);
+    case 'vI': return genOrI(vars,budget,rules,cx);
+    case 'vE': return genOrE(vars,cx);
+    case '~E': return genNotE(vars,cx);
+    case '<-->I': return genIffI(vars,cx);
+    case '<-->E': return genIffE(vars,cx);
+    case 'MT': return genMT(vars,cx);
+    case 'HS': return genHS(vars,cx);
+    case 'DS': return genDS(vars,cx);
+    case 'DM': return genDM(vars,cx);
+    case 'DN': return genDN(vars,cx);
+    case 'MI': return genMI(vars,cx);
+    case 'TRANS': return genTRANS(vars,cx);
+    case 'EXP': return genEXP(vars,cx);
+    default: return genAtomPremise(vars,cx);
+  }
+}
+function genAndI(vars,budget,rules,cx){
+  const A=genAny(vars,budget-1,rules,cx), B=genAny(vars,budget-1,rules,cx);
+  const merged=mergeLines(A.lines,B.lines);
+  const formula={type:'and',a:A.formula,b:B.formula};
+  merged.lines.push({formula,rule:'&I',cites:[merged.idx1,merged.idx2]});
+  return {formula, lines: merged.lines};
+}
+function genAndE(vars,budget,rules,cx){
+  const inner=genAndI(vars,Math.max(1,budget-1),rules,cx);
+  const pickLeft=Math.random()<0.5;
+  const extracted = pickLeft? inner.formula.a : inner.formula.b;
+  const lines=inner.lines.slice();
+  lines.push({formula:extracted, rule:'&E', cites:[lines.length-1]});
+  return {formula:extracted, lines};
+}
+function genCondE(vars,budget,rules,cx){
+  const P=genAny(vars,budget-1,rules,cx);
+  const Q=randSimpleFormula(vars,cx);
+  const condFormula={type:'cond',a:P.formula,b:Q};
+  const lines=P.lines.slice();
+  lines.push({formula:condFormula, rule:'Premise', cites:[]});
+  const condIdx=lines.length-1;
+  const pIdx=P.lines.length-1;
+  lines.push({formula:Q, rule:'-->E', cites:[condIdx,pIdx]});
+  return {formula:Q, lines};
+}
+function genOrI(vars,budget,rules,cx){
+  const A=genAny(vars,budget-1,rules,cx);
+  const other=randSimpleFormula(vars,cx);
+  const formula={type:'or',a:A.formula,b:other};
+  const lines=A.lines.slice();
+  lines.push({formula,rule:'vI',cites:[lines.length-1]});
+  return {formula, lines};
+}
+function genOrE(vars,cx){
+  const A=randSimpleFormula(vars,cx),B=randSimpleFormula(vars,cx),C=randSimpleFormula(vars,cx);
+  const disj={type:'or',a:A,b:B}, cond1={type:'cond',a:A,b:C}, cond2={type:'cond',a:B,b:C};
+  const lines=[{formula:disj,rule:'Premise',cites:[]},{formula:cond1,rule:'Premise',cites:[]},{formula:cond2,rule:'Premise',cites:[]}];
+  lines.push({formula:C, rule:'vE', cites:[0,1,2]});
+  return {formula:C, lines};
+}
+function genNotE(vars,cx){
+  const base=randSimpleFormula(vars,cx);
+  const notnot={type:'not',a:{type:'not',a:base}};
+  const lines=[{formula:notnot,rule:'Premise',cites:[]}];
+  lines.push({formula:base,rule:'~E',cites:[0]});
+  return {formula:base, lines};
+}
+function genIffI(vars,cx){
+  const P=randSimpleFormula(vars,cx), Q=randSimpleFormula(vars,cx);
+  const c1={type:'cond',a:P,b:Q}, c2={type:'cond',a:Q,b:P};
+  const lines=[{formula:c1,rule:'Premise',cites:[]},{formula:c2,rule:'Premise',cites:[]}];
+  const formula={type:'iff',a:P,b:Q};
+  lines.push({formula,rule:'<-->I',cites:[0,1]});
+  return {formula, lines};
+}
+function genIffE(vars,cx){
+  const P=randSimpleFormula(vars,cx), Q=randSimpleFormula(vars,cx);
+  const iff={type:'iff',a:P,b:Q};
+  const lines=[{formula:iff,rule:'Premise',cites:[]}];
+  const dir=Math.random()<0.5;
+  const formula= dir? {type:'cond',a:P,b:Q}:{type:'cond',a:Q,b:P};
+  lines.push({formula,rule:'<-->E',cites:[0]});
+  return {formula, lines};
+}
+function genMT(vars,cx){
+  const P=randSimpleFormula(vars,cx), Q=randSimpleFormula(vars,cx);
+  const cond={type:'cond',a:P,b:Q}, notq={type:'not',a:Q};
+  const lines=[{formula:cond,rule:'Premise',cites:[]},{formula:notq,rule:'Premise',cites:[]}];
+  const formula={type:'not',a:P};
+  lines.push({formula,rule:'MT',cites:[0,1]});
+  return {formula, lines};
+}
+function genHS(vars,cx){
+  const P=randSimpleFormula(vars,cx), Q=randSimpleFormula(vars,cx), R=randSimpleFormula(vars,cx);
+  const c1={type:'cond',a:P,b:Q}, c2={type:'cond',a:Q,b:R};
+  const lines=[{formula:c1,rule:'Premise',cites:[]},{formula:c2,rule:'Premise',cites:[]}];
+  const formula={type:'cond',a:P,b:R};
+  lines.push({formula,rule:'HS',cites:[0,1]});
+  return {formula, lines};
+}
+function genDS(vars,cx){
+  const P=randSimpleFormula(vars,cx), Q=randSimpleFormula(vars,cx);
+  const disj={type:'or',a:P,b:Q}, notp={type:'not',a:P};
+  const lines=[{formula:disj,rule:'Premise',cites:[]},{formula:notp,rule:'Premise',cites:[]}];
+  lines.push({formula:Q,rule:'DS',cites:[0,1]});
+  return {formula:Q, lines};
+}
+function genDM(vars,cx){
+  const P=randSimpleFormula(vars,cx), Q=randSimpleFormula(vars,cx);
+  if(Math.random()<0.5){
+    const src={type:'not',a:{type:'and',a:P,b:Q}};
+    const dst={type:'or',a:{type:'not',a:P},b:{type:'not',a:Q}};
+    return {formula:dst, lines:[{formula:src,rule:'Premise',cites:[]},{formula:dst,rule:'DM',cites:[0]}]};
+  } else {
+    const src={type:'not',a:{type:'or',a:P,b:Q}};
+    const dst={type:'and',a:{type:'not',a:P},b:{type:'not',a:Q}};
+    return {formula:dst, lines:[{formula:src,rule:'Premise',cites:[]},{formula:dst,rule:'DM',cites:[0]}]};
+  }
+}
+function genDN(vars,cx){
+  const P=randSimpleFormula(vars,cx);
+  const dst={type:'not',a:{type:'not',a:P}};
+  if(Math.random()<0.5) return {formula:dst, lines:[{formula:P,rule:'Premise',cites:[]},{formula:dst,rule:'DN',cites:[0]}]};
+  return {formula:P, lines:[{formula:dst,rule:'Premise',cites:[]},{formula:P,rule:'DN',cites:[0]}]};
+}
+function genMI(vars,cx){
+  const P=randSimpleFormula(vars,cx), Q=randSimpleFormula(vars,cx);
+  const cond={type:'cond',a:P,b:Q}, disj={type:'or',a:{type:'not',a:P},b:Q};
+  if(Math.random()<0.5) return {formula:disj, lines:[{formula:cond,rule:'Premise',cites:[]},{formula:disj,rule:'MI',cites:[0]}]};
+  return {formula:cond, lines:[{formula:disj,rule:'Premise',cites:[]},{formula:cond,rule:'MI',cites:[0]}]};
+}
+function genTRANS(vars,cx){
+  const P=randSimpleFormula(vars,cx), Q=randSimpleFormula(vars,cx);
+  const cond={type:'cond',a:P,b:Q}, trans={type:'cond',a:{type:'not',a:Q},b:{type:'not',a:P}};
+  if(Math.random()<0.5) return {formula:trans, lines:[{formula:cond,rule:'Premise',cites:[]},{formula:trans,rule:'TRANS',cites:[0]}]};
+  return {formula:cond, lines:[{formula:trans,rule:'Premise',cites:[]},{formula:cond,rule:'TRANS',cites:[0]}]};
+}
+function genEXP(vars,cx){
+  const P=randSimpleFormula(vars,cx), Q=randSimpleFormula(vars,cx), R=randSimpleFormula(vars,cx);
+  const src={type:'cond',a:{type:'and',a:P,b:Q},b:R};
+  const dst={type:'cond',a:P,b:{type:'cond',a:Q,b:R}};
+  if(Math.random()<0.5) return {formula:dst, lines:[{formula:src,rule:'Premise',cites:[]},{formula:dst,rule:'EXP',cites:[0]}]};
+  return {formula:src, lines:[{formula:dst,rule:'Premise',cites:[]},{formula:src,rule:'EXP',cites:[0]}]};
+}
+function extendWithRandomStep(prev,vars,rules,cx){
+  const choice=pickRandom(['and','condE','or']);
+  const lines=prev.lines.slice();
+  const prevIdx=lines.length-1;
+  if(choice==='and'){
+    const fresh=genAtomPremise(vars,cx);
+    const merged=mergeLines(lines,fresh.lines);
+    const formula={type:'and',a:prev.formula,b:fresh.formula};
+    merged.lines.push({formula,rule:'&I',cites:[merged.idx1,merged.idx2]});
+    return {formula, lines: merged.lines};
+  } else if(choice==='condE'){
+    const Q=randSimpleFormula(vars,cx);
+    const condFormula={type:'cond',a:prev.formula,b:Q};
+    lines.push({formula:condFormula, rule:'Premise', cites:[]});
+    const condIdx=lines.length-1;
+    lines.push({formula:Q, rule:'-->E', cites:[condIdx,prevIdx]});
+    return {formula:Q, lines};
+  } else {
+    const other=randSimpleFormula(vars,cx);
+    const formula={type:'or',a:prev.formula,b:other};
+    lines.push({formula, rule:'vI', cites:[prevIdx]});
+    return {formula, lines};
+  }
+}
+function nestedStep(cur,vars,rules,cx,level){
+  const nestedAssum=randSimpleFormula(vars,cx);
+  let nestedCur={formula:nestedAssum, lines:[{formula:nestedAssum, rule:'Assume', cites:[], isAssumption:true}]};
+  const nSteps=1+Math.floor(Math.random()*2);
+  for(let i=0;i<nSteps;i++) nestedCur=extendWithRandomStep(nestedCur,vars,rules,cx);
+  const nestedLinesLeveled=withLevel(nestedCur.lines, level+1);
+  const dischargeFormula={type:'cond', a:nestedAssum, b:nestedCur.formula};
+  const merged=mergeLines(cur.lines, nestedLinesLeveled);
+  const nestedStartInMerged=merged.lines.length - nestedLinesLeveled.length;
+  const nestedEndInMerged=merged.lines.length-1;
+  merged.lines.push({formula:dischargeFormula, rule:'-->I', rangeStart:nestedStartInMerged, rangeEnd:nestedEndInMerged});
+  const dischargeIdx=merged.lines.length-1;
+  const formula={type:'and', a:cur.formula, b:dischargeFormula};
+  merged.lines.push({formula, rule:'&I', cites:[merged.idx1, dischargeIdx]});
+  return {formula, lines: merged.lines};
+}
+function genConditionalSubproof(vars,rules,cx,steps,level,allowNested){
+  const P=randSimpleFormula(vars,cx);
+  let cur={formula:P, lines:[{formula:P, rule:'Assume', cites:[], isAssumption:true}]};
+  for(let i=0;i<steps;i++){
+    if(allowNested && i===0){ cur=nestedStep(cur,vars,rules,cx,level); }
+    else { cur=extendWithRandomStep(cur,vars,rules,cx); }
+  }
+  const leveled=withLevel(cur.lines, level);
+  const dischargeFormula={type:'cond', a:P, b:cur.formula};
+  const dischargeLine={formula:dischargeFormula, rule:'-->I', rangeStart:0, rangeEnd:leveled.length-1, level:level-1};
+  return {formula:dischargeFormula, lines: leveled.concat([dischargeLine])};
+}
+function genNegationSubproof(vars,rules,cx,steps,level){
+  const P=randSimpleFormula(vars,cx);
+  let cur={formula:P, lines:[{formula:P, rule:'Assume', cites:[], isAssumption:true}]};
+  for(let i=0;i<Math.max(1,steps-1);i++) cur=extendWithRandomStep(cur,vars,rules,cx);
+  const negX={type:'not', a:cur.formula};
+  const lines=cur.lines.slice();
+  lines.push({formula:negX, rule:'Premise', cites:[]});
+  const negIdx=lines.length-1;
+  const curFinalIdx=cur.lines.length-1;
+  const contra={type:'and', a:cur.formula, b:negX};
+  lines.push({formula:contra, rule:'&I', cites:[curFinalIdx, negIdx]});
+  const leveled=withLevel(lines, level);
+  const dischargeFormula={type:'not', a:P};
+  const dischargeLine={formula:dischargeFormula, rule:'~I', rangeStart:0, rangeEnd:leveled.length-1, level:level-1};
+  return {formula:dischargeFormula, lines: leveled.concat([dischargeLine])};
+}
+function finalizeGlobalOrder(rawLines){
+  const tagged=rawLines.map((l,i)=>Object.assign({},l,{_id:i}));
+  const premises=tagged.filter(l=>l.rule==='Premise');
+  const others=tagged.filter(l=>l.rule!=='Premise');
+  const keptPremises=[]; const idRemap={};
+  premises.forEach(p=>{
+    const dup=keptPremises.find(k=>eq(k.formula,p.formula));
+    if(dup){ idRemap[p._id]=dup._id; } else { keptPremises.push(p); idRemap[p._id]=p._id; }
+  });
+  const finalOrder=keptPremises.concat(others);
+  const idToNewIdx={};
+  finalOrder.forEach((l,i)=>{ idToNewIdx[l._id]=i; });
+  return finalOrder.map(l=>{
+    const nl={formula:l.formula, rule:l.rule, level: l.rule==='Premise'?0:l.level, isAssumption:l.isAssumption||false};
+    if(l.cites) nl.cites=l.cites.map(c=> idToNewIdx[ idRemap[c]!==undefined? idRemap[c]:c ]);
+    if(l.rangeStart!==undefined){
+      nl.rangeStart=idToNewIdx[ idRemap[l.rangeStart]!==undefined? idRemap[l.rangeStart]:l.rangeStart ];
+      nl.rangeEnd=idToNewIdx[ idRemap[l.rangeEnd]!==undefined? idRemap[l.rangeEnd]:l.rangeEnd ];
+    }
+    return nl;
+  });
+}
+function verifyGeneratedLines(finalLines){
+  for(let i=0;i<finalLines.length;i++){
+    const ln=finalLines[i];
+    if(ln.rule==='Premise'||ln.isAssumption) continue;
+    let ctx={}, citedFormulas=[];
+    if(ln.rangeStart!==undefined){ ctx.range={assum:finalLines[ln.rangeStart].formula, last:finalLines[ln.rangeEnd].formula}; }
+    else { citedFormulas=(ln.cites||[]).map(idx=>finalLines[idx].formula); }
+    const res=checkRule(ln.rule, ln.formula, citedFormulas, ctx);
+    if(res!==true) return {ok:false, i, res};
+  }
+  return {ok:true};
+}
+function generateBasicDerivedEquivalence(category, difficulty){
+  const atoms=ATOMS.slice(0, Math.min(6, 2+Math.floor((difficulty-1)*1.2)));
+  const cx=Math.min(2, Math.floor((difficulty-1)/2));
+  const budget=difficulty;
+  const extra=Math.max(0, difficulty-1);
+  const basicRules=['&E','&I','-->E','vI','vE','~E','<-->I','<-->E'];
+  let result;
+  if(category==='basic'){
+    result=genAny(atoms, budget, basicRules, cx);
+  } else if(category==='derived'){
+    const forced=pickRandom(['MT','HS','DS']);
+    result = forced==='MT'? genMT(atoms,cx) : forced==='HS'? genHS(atoms,cx) : genDS(atoms,cx);
+  } else {
+    const forced=pickRandom(['DM','DN','MI','TRANS','EXP']);
+    result = forced==='DM'?genDM(atoms,cx): forced==='DN'?genDN(atoms,cx): forced==='MI'?genMI(atoms,cx): forced==='TRANS'?genTRANS(atoms,cx):genEXP(atoms,cx);
+  }
+  const extendRules = category==='basic'? basicRules : category==='derived'? basicRules.concat(['MT','HS','DS']) : basicRules.concat(['DM','DN','MI','TRANS','EXP']);
+  for(let i=0;i<extra;i++){ result=extendWithRandomStep(result, atoms, extendRules, cx); }
+  const leveled=withLevel(result.lines, 0);
+  const finalLines=finalizeGlobalOrder(leveled);
+  const verified=verifyGeneratedLines(finalLines);
+  if(!verified.ok) return null;
+  const premises=finalLines.filter(l=>l.rule==='Premise').map(l=>render(l.formula));
+  const conclusion=render(finalLines[finalLines.length-1].formula);
+  return {premises, conclusion, solutionLines: finalLines};
+}
+function generateHypothetical(difficulty){
+  const atoms=ATOMS.slice(0, Math.min(6, 2+Math.floor((difficulty-1)*1.2)));
+  const cx=Math.min(2, Math.floor((difficulty-1)/2));
+  const rules=['&E','&I','-->E','vI','vE','~E','<-->I','<-->E','MT','HS','DS'];
+  const innerSteps=1+Math.min(4,difficulty);
+  const allowNested=difficulty>=4;
+  const numSubproofs=difficulty>=4? 2:1;
+  const useNegation=Math.random()<0.3;
+  let subproofs=[];
+  for(let s=0;s<numSubproofs;s++){
+    if(useNegation && s===0) subproofs.push(genNegationSubproof(atoms,rules,cx,innerSteps,1));
+    else subproofs.push(genConditionalSubproof(atoms,rules,cx,innerSteps,1, allowNested && s===0));
+  }
+  let combinedLines=subproofs[0].lines, combinedFormula=subproofs[0].formula;
+  for(let s=1;s<subproofs.length;s++){
+    const merged=mergeLines(combinedLines, subproofs[s].lines);
+    const formula={type:'and', a:combinedFormula, b:subproofs[s].formula};
+    merged.lines.push({formula, rule:'&I', cites:[merged.idx1, merged.idx2], level:0});
+    combinedLines=merged.lines; combinedFormula=formula;
+  }
+  const finalLines=finalizeGlobalOrder(combinedLines);
+  const verified=verifyGeneratedLines(finalLines);
+  if(!verified.ok) return null;
+  const premises=finalLines.filter(l=>l.rule==='Premise').map(l=>render(l.formula));
+  const conclusion=render(finalLines[finalLines.length-1].formula);
+  return {premises, conclusion, solutionLines: finalLines};
+}
+function tIdentity(vars){
+  const P=randSimpleFormula(vars,0);
+  const lines=[
+    {formula:P, rule:'Assume', cites:[], isAssumption:true, level:1},
+    {formula:{type:'cond',a:P,b:P}, rule:'-->I', rangeStart:0, rangeEnd:0, level:0}
+  ];
+  return {lines};
+}
+function tNonContra(vars){
+  const P=randSimpleFormula(vars,0);
+  const assumF={type:'and',a:P,b:{type:'not',a:P}};
+  const lines=[
+    {formula:assumF, rule:'Assume', cites:[], isAssumption:true, level:1},
+    {formula:{type:'not',a:assumF}, rule:'~I', rangeStart:0, rangeEnd:0, level:0}
+  ];
+  return {lines};
+}
+function tConjSimp(vars){
+  const P=randSimpleFormula(vars,0), Q=randSimpleFormula(vars,0);
+  const assumF={type:'and',a:P,b:Q};
+  const lines=[
+    {formula:assumF, rule:'Assume', cites:[], isAssumption:true, level:1},
+    {formula:P, rule:'&E', cites:[0], level:1},
+    {formula:{type:'cond',a:assumF,b:P}, rule:'-->I', rangeStart:0, rangeEnd:1, level:0}
+  ];
+  return {lines};
+}
+function tCurryAnd(vars){
+  const P=randSimpleFormula(vars,0), Q=randSimpleFormula(vars,0);
+  const lines=[
+    {formula:P, rule:'Assume', cites:[], isAssumption:true, level:1},
+    {formula:Q, rule:'Assume', cites:[], isAssumption:true, level:2},
+    {formula:{type:'and',a:P,b:Q}, rule:'&I', cites:[0,1], level:2}
+  ];
+  lines.push({formula:{type:'cond',a:Q,b:{type:'and',a:P,b:Q}}, rule:'-->I', rangeStart:1, rangeEnd:2, level:1});
+  lines.push({formula:{type:'cond',a:P,b:{type:'cond',a:Q,b:{type:'and',a:P,b:Q}}}, rule:'-->I', rangeStart:0, rangeEnd:3, level:0});
+  return {lines};
+}
+function tLEM(vars){
+  const P=randSimpleFormula(vars,0);
+  const goal={type:'or',a:P,b:{type:'not',a:P}};
+  const assumF={type:'not', a:goal};
+  const dm={type:'and', a:{type:'not',a:P}, b:{type:'not',a:{type:'not',a:P}}};
+  const lines=[
+    {formula:assumF, rule:'Assume', cites:[], isAssumption:true, level:1},
+    {formula:dm, rule:'DM', cites:[0], level:1},
+    {formula:{type:'not',a:P}, rule:'&E', cites:[1], level:1},
+    {formula:{type:'not',a:{type:'not',a:P}}, rule:'&E', cites:[1], level:1},
+    {formula:P, rule:'~E', cites:[3], level:1},
+    {formula:{type:'and',a:P,b:{type:'not',a:P}}, rule:'&I', cites:[4,2], level:1}
+  ];
+  const dischargeF={type:'not', a:assumF};
+  lines.push({formula:dischargeF, rule:'~I', rangeStart:0, rangeEnd:5, level:0});
+  lines.push({formula:goal, rule:'~E', cites:[6], level:0});
+  return {lines};
+}
+function tTransposition(vars){
+  const P=randSimpleFormula(vars,0), Q=randSimpleFormula(vars,0);
+  const PQ={type:'cond',a:P,b:Q};
+  const notQ={type:'not',a:Q};
+  const lines=[
+    {formula:PQ, rule:'Assume', cites:[], isAssumption:true, level:1},
+    {formula:notQ, rule:'Assume', cites:[], isAssumption:true, level:2},
+    {formula:P, rule:'Assume', cites:[], isAssumption:true, level:3},
+    {formula:Q, rule:'-->E', cites:[0,2], level:3},
+    {formula:{type:'and',a:Q,b:notQ}, rule:'&I', cites:[3,1], level:3}
+  ];
+  lines.push({formula:{type:'not',a:P}, rule:'~I', rangeStart:2, rangeEnd:4, level:2});
+  lines.push({formula:{type:'cond',a:notQ,b:{type:'not',a:P}}, rule:'-->I', rangeStart:1, rangeEnd:5, level:1});
+  lines.push({formula:{type:'cond',a:PQ,b:{type:'cond',a:notQ,b:{type:'not',a:P}}}, rule:'-->I', rangeStart:0, rangeEnd:6, level:0});
+  return {lines};
+}
+const THEOREM_TEMPLATES=[
+  {fn:tIdentity, minDiff:1},
+  {fn:tNonContra, minDiff:1},
+  {fn:tConjSimp, minDiff:2},
+  {fn:tCurryAnd, minDiff:2},
+  {fn:tLEM, minDiff:3},
+  {fn:tTransposition, minDiff:4}
+];
+function generateTheorem(difficulty){
+  const atoms=ATOMS.slice(0, Math.min(6, 2+Math.floor((difficulty-1)*1.2)));
+  const eligible=THEOREM_TEMPLATES.filter(t=>t.minDiff<=difficulty);
+  const pool=eligible.length? eligible : [THEOREM_TEMPLATES[0]];
+  const chosen=pickRandom(pool);
+  const {lines}=chosen.fn(atoms);
+  const verified=verifyGeneratedLines(lines);
+  if(!verified.ok) return null;
+  const conclusion=render(lines[lines.length-1].formula);
+  return {premises:[], conclusion, solutionLines: lines};
+}
+let generatedCounter=0;
+function generateRandomProblem(){
+  const category=document.getElementById('catSelect').value;
+  const difficulty=+document.getElementById('diffSlider').value;
+  let out=null, attempts=0;
+  while(!out && attempts<40){
+    attempts++;
+    try{
+      if(category==='basic') out=generateBasicDerivedEquivalence('basic',difficulty);
+      else if(category==='derived') out=generateBasicDerivedEquivalence('derived',difficulty);
+      else if(category==='equivalence') out=generateBasicDerivedEquivalence('equivalence',difficulty);
+      else if(category==='hypothetical') out=generateHypothetical(difficulty);
+      else if(category==='theorem') out=generateTheorem(difficulty);
+    }catch(e){ out=null; }
+  }
+  const msg=document.getElementById('msgBox');
+  if(!out){
+    msg.className='err';
+    msg.textContent='Could not generate a valid problem after several attempts — please try again (or try a different difficulty).';
+    return;
+  }
+  document.getElementById('premisesInput').value=out.premises.join(', ');
+  document.getElementById('concInput').value=out.conclusion;
+  startProof();
+  generatedCounter++;
+  currentSolution=out.solutionLines;
+  document.getElementById('showSolBtn').style.display='inline-block';
+  document.getElementById('solutionBox').style.display='none';
+  msg.className='';
+  msg.textContent='Random Problem #'+generatedCounter+' generated — Category: '+category+', Difficulty: '+difficulty+'/5. Premises and conclusion loaded below.';
+}
+function toggleSolution(){
+  const box=document.getElementById('solutionBox');
+  if(!currentSolution) return;
+  if(box.style.display==='none'){ box.innerHTML=renderSolutionHTML(currentSolution); box.style.display='block'; }
+  else { box.style.display='none'; }
+}
+function renderSolutionHTML(sol){
+  let html='<h3>Solution (one possible proof)</h3>';
+  sol.forEach((l,i)=>{
+    const indent='&nbsp;&nbsp;&nbsp;'.repeat(l.level||0);
+    const cites = l.rangeStart!==undefined ? (l.rangeStart+1)+'-'+(l.rangeEnd+1) : (l.cites||[]).map(c=>c+1).join(',');
+    const ruleLabel = l.rule==='Premise'? 'Premise' : l.isAssumption? 'Assume' : (l.rule+(cites?' '+cites:''));
+    html+='<div style="font-family:ui-monospace,monospace;padding:2px 0;">'+(i+1)+'. '+indent+render(l.formula)+'&nbsp;&nbsp;<span style="color:#0064A4">['+ruleLabel+']</span></div>';
+  });
+  return html;
+}
+/* init */
+populateQuestions();
+</script>
+</body></html>
