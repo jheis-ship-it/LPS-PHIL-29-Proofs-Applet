@@ -72,16 +72,16 @@ select,input[type=text],button,input[type=range]{font:inherit;}
   <span class="closeP" onclick="togglePanel('rulesPanel')">✕</span>
   <h2>Rules Reference</h2>
   <h3>Basic Rules</h3>
-  <div class="rule"><b>&amp;E</b> (Simplification): <i>p</i> &amp; <i>q</i> ⊢ <i>p</i> (and ⊢ <i>q</i>)</div>
-  <div class="rule"><b>&amp;I</b> (Conjunction): <i>p</i>, <i>q</i> ⊢ <i>p</i> &amp; <i>q</i></div>
-  <div class="rule"><b>--&gt;E</b> (Modus Ponens): <i>p</i> --&gt; <i>q</i>, <i>p</i> ⊢ <i>q</i></div>
-  <div class="rule"><b>--&gt;I</b> (Cond. Proof): Hypothesis <i>p</i> ... derive <i>q</i> ⊢ <i>p</i> --&gt; <i>q</i></div>
-  <div class="rule"><b>vI</b> (Addition): <i>p</i> ⊢ <i>p</i> v <i>q</i></div>
-  <div class="rule"><b>vE</b> (Constructive Dilemma): <i>p</i> v <i>q</i>, <i>p</i> --&gt; <i>r</i>, <i>q</i> --&gt; <i>r</i> ⊢ <i>r</i></div>
-  <div class="rule"><b>~I</b> (Indirect Proof): Hypothesis <i>p</i> ... derive <i>q</i> &amp; ~<i>q</i> ⊢ ~<i>p</i></div>
-  <div class="rule"><b>~E</b> (Double Neg. Elimination): ~~<i>p</i> ⊢ <i>p</i></div>
-  <div class="rule"><b>&lt;--&gt;I</b>: <i>p</i> --&gt; <i>q</i>, <i>q</i> --&gt; <i>p</i> ⊢ <i>p</i> &lt;--&gt; <i>q</i></div>
-  <div class="rule"><b>&lt;--&gt;E</b>: <i>p</i> &lt;--&gt; <i>q</i> ⊢ <i>p</i> --&gt; <i>q</i> (or <i>q</i> --&gt; <i>p</i>)</div>
+  <div class="rule"><b>&amp;E</b> (Conjunction Elimination): <i>p</i> &amp; <i>q</i> ⊢ <i>p</i> (and ⊢ <i>q</i>)</div>
+  <div class="rule"><b>&amp;I</b> (Conjunction Introduction): <i>p</i>, <i>q</i> ⊢ <i>p</i> &amp; <i>q</i></div>
+  <div class="rule"><b>--&gt;E</b> (Conditional Elimination): <i>p</i> --&gt; <i>q</i>, <i>p</i> ⊢ <i>q</i></div>
+  <div class="rule"><b>--&gt;I</b> (Conditional Introduction): Hypothesis <i>p</i> ... derive <i>q</i> ⊢ <i>p</i> --&gt; <i>q</i></div>
+  <div class="rule"><b>vI</b> (Disjunction Introduction): <i>p</i> ⊢ <i>p</i> v <i>q</i></div>
+  <div class="rule"><b>vE</b> (Disjunction Elimination): <i>p</i> v <i>q</i>, <i>p</i> --&gt; <i>r</i>, <i>q</i> --&gt; <i>r</i> ⊢ <i>r</i></div>
+  <div class="rule"><b>~I</b> (Negation Introduction): Hypothesis <i>p</i> ... derive <i>q</i> &amp; ~<i>q</i> ⊢ ~<i>p</i></div>
+  <div class="rule"><b>~E</b> (Negation Elimination): ~~<i>p</i> ⊢ <i>p</i></div>
+  <div class="rule"><b>&lt;--&gt;I</b> (Biconditional Introduction): <i>p</i> --&gt; <i>q</i>, <i>q</i> --&gt; <i>p</i> ⊢ <i>p</i> &lt;--&gt; <i>q</i></div>
+  <div class="rule"><b>&lt;--&gt;E</b> (Biconditional Elimination): <i>p</i> &lt;--&gt; <i>q</i> ⊢ <i>p</i> --&gt; <i>q</i> (or <i>q</i> --&gt; <i>p</i>)</div>
   <h3>Derived Rules</h3>
   <div class="rule"><b>MT</b>: <i>p</i> --&gt; <i>q</i>, ~<i>q</i> ⊢ ~<i>p</i></div>
   <div class="rule"><b>HS</b>: <i>p</i> --&gt; <i>q</i>, <i>q</i> --&gt; <i>r</i> ⊢ <i>p</i> --&gt; <i>r</i></div>
