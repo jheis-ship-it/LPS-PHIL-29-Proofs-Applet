@@ -36,7 +36,7 @@ select,input[type=text],button,input[type=range]{font:inherit;}
 .bar{width:14px;border-left:2px solid var(--blue);margin-right:6px;align-self:stretch;}
 .formulaInput{flex:1;min-width:160px;padding:.35rem .5rem;border:1px solid #ccd4dc;border-radius:6px;font-family:ui-monospace,monospace;}
 .assumeInput{border-color:var(--gold);background:#fffbe6;}
-.ruleSelect{padding:.35rem;border:1px solid #ccd4dc;border-radius:6px;min-width:110px;}
+.ruleSelect{padding:.35rem;border:1px solid #ccd4dc;border-radius:6px;min-width:120px;}
 .citesInput{width:80px;padding:.35rem;border:1px solid #ccd4dc;border-radius:6px;font-family:ui-monospace,monospace;}
 .lineMsg{width:100%;font-size:.8rem;padding:.1rem 0 .1rem 2.7rem;}
 .lineMsg.ok{color:#1a7a3a;}
@@ -59,6 +59,8 @@ select,input[type=text],button,input[type=range]{font:inherit;}
 .panel li{margin-bottom:.5rem;font-size:.9rem;}
 .closeP{float:right;cursor:pointer;font-weight:700;color:#888;}
 .hint{font-size:.8rem;color:#666;}
+.fml{font-family:ui-monospace,monospace;}
+.fml i{font-style:italic;}
 </style></head>
 <body>
 <header><h1>Natural Deduction Trainer</h1><p>LPS 29 · UC Irvine — Fall 2026</p></header>
@@ -70,39 +72,39 @@ select,input[type=text],button,input[type=range]{font:inherit;}
   <span class="closeP" onclick="togglePanel('rulesPanel')">✕</span>
   <h2>Rules Reference</h2>
   <h3>Basic Rules</h3>
-  <div class="rule"><b>&amp;E</b> (Simplification): p&amp;q ⊢ p (and ⊢ q)</div>
-  <div class="rule"><b>&amp;I</b> (Conjunction): p, q ⊢ p&amp;q</div>
-  <div class="rule"><b>--&gt;E</b> (Modus Ponens): p--&gt;q, p ⊢ q</div>
-  <div class="rule"><b>--&gt;I</b> (Cond. Proof): Assume p ... derive q ⊢ p--&gt;q</div>
-  <div class="rule"><b>vI</b> (Addition): p ⊢ pvq</div>
-  <div class="rule"><b>vE</b> (Constructive Dilemma): pvq, p--&gt;r, q--&gt;r ⊢ r</div>
-  <div class="rule"><b>~I</b> (Indirect Proof): Assume p ... derive q&amp;~q ⊢ ~p</div>
-  <div class="rule"><b>~E</b> (Double Neg. Elimination): ~~p ⊢ p</div>
-  <div class="rule"><b>&lt;--&gt;I</b>: p--&gt;q, q--&gt;p ⊢ p&lt;--&gt;q</div>
-  <div class="rule"><b>&lt;--&gt;E</b>: p&lt;--&gt;q ⊢ p--&gt;q (or q--&gt;p)</div>
+  <div class="rule"><b>&amp;E</b> (Simplification): <i>p</i> &amp; <i>q</i> ⊢ <i>p</i> (and ⊢ <i>q</i>)</div>
+  <div class="rule"><b>&amp;I</b> (Conjunction): <i>p</i>, <i>q</i> ⊢ <i>p</i> &amp; <i>q</i></div>
+  <div class="rule"><b>--&gt;E</b> (Modus Ponens): <i>p</i> --&gt; <i>q</i>, <i>p</i> ⊢ <i>q</i></div>
+  <div class="rule"><b>--&gt;I</b> (Cond. Proof): Hypothesis <i>p</i> ... derive <i>q</i> ⊢ <i>p</i> --&gt; <i>q</i></div>
+  <div class="rule"><b>vI</b> (Addition): <i>p</i> ⊢ <i>p</i> v <i>q</i></div>
+  <div class="rule"><b>vE</b> (Constructive Dilemma): <i>p</i> v <i>q</i>, <i>p</i> --&gt; <i>r</i>, <i>q</i> --&gt; <i>r</i> ⊢ <i>r</i></div>
+  <div class="rule"><b>~I</b> (Indirect Proof): Hypothesis <i>p</i> ... derive <i>q</i> &amp; ~<i>q</i> ⊢ ~<i>p</i></div>
+  <div class="rule"><b>~E</b> (Double Neg. Elimination): ~~<i>p</i> ⊢ <i>p</i></div>
+  <div class="rule"><b>&lt;--&gt;I</b>: <i>p</i> --&gt; <i>q</i>, <i>q</i> --&gt; <i>p</i> ⊢ <i>p</i> &lt;--&gt; <i>q</i></div>
+  <div class="rule"><b>&lt;--&gt;E</b>: <i>p</i> &lt;--&gt; <i>q</i> ⊢ <i>p</i> --&gt; <i>q</i> (or <i>q</i> --&gt; <i>p</i>)</div>
   <h3>Derived Rules</h3>
-  <div class="rule"><b>MT</b>: p--&gt;q, ~q ⊢ ~p</div>
-  <div class="rule"><b>HS</b>: p--&gt;q, q--&gt;r ⊢ p--&gt;r</div>
-  <div class="rule"><b>DS</b>: pvq, ~p ⊢ q (or pvq, ~q ⊢ p)</div>
+  <div class="rule"><b>MT</b>: <i>p</i> --&gt; <i>q</i>, ~<i>q</i> ⊢ ~<i>p</i></div>
+  <div class="rule"><b>HS</b>: <i>p</i> --&gt; <i>q</i>, <i>q</i> --&gt; <i>r</i> ⊢ <i>p</i> --&gt; <i>r</i></div>
+  <div class="rule"><b>DS</b>: <i>p</i> v <i>q</i>, ~<i>p</i> ⊢ <i>q</i> (or <i>p</i> v <i>q</i>, ~<i>q</i> ⊢ <i>p</i>)</div>
   <h3>Equivalence Rules</h3>
-  <div class="rule"><b>DM</b>: ~(p&amp;q) :: ~pv~q &nbsp;|&nbsp; ~(pvq) :: ~p&amp;~q</div>
-  <div class="rule"><b>DN</b>: p :: ~~p</div>
-  <div class="rule"><b>MI</b>: p--&gt;q :: ~pvq</div>
-  <div class="rule"><b>TRANS</b>: p--&gt;q :: ~q--&gt;~p</div>
-  <div class="rule"><b>EXP</b>: (p&amp;q)--&gt;r :: p--&gt;(q--&gt;r)</div>
-  <p class="hint">Equivalence rules may be applied to the whole line or to any subformula within it.</p>
+  <div class="rule"><b>DM</b>: ~(<i>p</i> &amp; <i>q</i>) :: ~<i>p</i> v ~<i>q</i> &nbsp;|&nbsp; ~(<i>p</i> v <i>q</i>) :: ~<i>p</i> &amp; ~<i>q</i></div>
+  <div class="rule"><b>DN</b>: <i>p</i> :: ~~<i>p</i></div>
+  <div class="rule"><b>MI</b>: <i>p</i> --&gt; <i>q</i> :: ~<i>p</i> v <i>q</i></div>
+  <div class="rule"><b>TRANS</b>: <i>p</i> --&gt; <i>q</i> :: ~<i>q</i> --&gt; ~<i>p</i></div>
+  <div class="rule"><b>EXP</b>: (<i>p</i> &amp; <i>q</i>) --&gt; <i>r</i> :: <i>p</i> --&gt; (<i>q</i> --&gt; <i>r</i>)</div>
+  <p class="hint">Equivalence rules may be applied to the whole line or to any subformula within it. Every compound subformula is displayed with its own parentheses unless it is the whole (terminal) formula.</p>
 </div>
 
 <div class="panel" id="stratPanel">
   <span class="closeP" onclick="togglePanel('stratPanel')">✕</span>
   <h2>Proof Strategies</h2>
   <ul>
-    <li><b>Look at the conclusion's main connective first.</b> A conditional (p--&gt;q) usually calls for --&gt;I: assume p, derive q. A negated conclusion (~p) usually calls for ~I: assume p, derive a contradiction.</li>
-    <li><b>Break down conjunctive premises immediately</b> with &amp;E.</li>
-    <li><b>If you have p--&gt;q and ~q, reach for MT.</b></li>
+    <li><b>Look at the conclusion's main connective first.</b> A conditional (<i>p</i> --&gt; <i>q</i>) usually calls for --&gt;I: take <i>p</i> as a hypothesis, derive <i>q</i>. A negated conclusion (~<i>p</i>) usually calls for ~I: take <i>p</i> as a hypothesis, derive a contradiction.</li>
+    <li><b>Break down conjunctive assumptions immediately</b> with &amp;E.</li>
+    <li><b>If you have <i>p</i> --&gt; <i>q</i> and ~<i>q</i>, reach for MT.</b></li>
     <li><b>Chain conditionals with HS</b> instead of two separate --&gt;E's.</li>
-    <li><b>Rewrite awkward premises with equivalence rules</b> — MI, TRANS, DM can reshape a formula into something usable.</li>
-    <li><b>For theorems (no premises),</b> you must generate your own material via Assume.</li>
+    <li><b>Rewrite awkward assumptions with equivalence rules</b> — MI, TRANS, DM can reshape a formula into something usable.</li>
+    <li><b>For theorems (no assumptions),</b> you must generate your own material via a Hypothesis.</li>
     <li><b>Discharge as soon as you can</b> once inside a subproof.</li>
   </ul>
 </div>
@@ -118,7 +120,7 @@ select,input[type=text],button,input[type=range]{font:inherit;}
     <button onclick="copySym('-->')" title="conditional">--></button>
     <button onclick="copySym('<-->')" title="biconditional"><--></button>
     <button onclick="copySym(':.')" title="therefore">:.</button>
-    <span class="hint">Use plain letters for sentences (not "v"). Separate premises with commas.</span>
+    <span class="hint">Use plain letters for sentences (not "v"). Separate assumptions with commas. Spaces are optional when you type; parentheses are required around every compound subformula.</span>
   </div>
 </div>
 
@@ -148,12 +150,13 @@ select,input[type=text],button,input[type=range]{font:inherit;}
     <button class="btn outline" id="showSolBtn" style="display:none" onclick="toggleSolution()">Show Solution</button>
   </div>
   <div class="argrow">
-    <input type="text" id="premisesInput" placeholder="premises, separated, by, commas (leave blank for a theorem)">
+    <input type="text" id="premisesInput" placeholder="assumptions, separated, by, commas (leave blank for a theorem)">
     <span class="dotsep">:.</span>
     <input type="text" id="concInput" placeholder="conclusion">
     <button class="btn gold" onclick="startProof()">Start / Restart Proof With This Argument</button>
   </div>
-  <p class="hint">Edit the premises/conclusion directly to build your own argument, or press Generate for an auto-made one, then press Start.</p>
+  <div id="argPreview" class="fml hint" style="margin-top:.3rem;"></div>
+  <p class="hint">Edit the assumptions/conclusion directly to build your own argument, or press Generate for an auto-made one, then press Start.</p>
 </div>
 
 <div class="card" id="solutionBox" style="display:none;"></div>
@@ -162,7 +165,7 @@ select,input[type=text],button,input[type=range]{font:inherit;}
   <div id="proofArea"></div>
   <div class="toolbar">
     <button class="btn" onclick="addLine()">+ Add Line</button>
-    <button class="btn" onclick="assumeLine()">⤵ Assume (open subproof)</button>
+    <button class="btn" onclick="assumeLine()">⤵ Hypothesis (open subproof)</button>
     <button class="btn" onclick="dischargeLine()">⤴ Discharge (close subproof)</button>
     <button class="btn outline" onclick="undoLast()">Undo Last Line</button>
     <button class="btn gold" onclick="checkProof()">✔ Check My Work</button>
@@ -219,19 +222,32 @@ function eq(a,b){
   if(a.type==='not') return eq(a.a,b.a);
   return eq(a.a,b.a)&&eq(a.b,b.b);
 }
-function precOf(n){ return {atom:6,not:5,and:4,or:3,cond:2,iff:1}[n.type]; }
-function render(node,parent){
-  let s;
-  if(node.type==='atom') s=node.name;
-  else if(node.type==='not') s='~'+render(node.a,node);
-  else { const op={and:'&',or:'v',cond:'-->',iff:'<-->'}[node.type]; s=render(node.a,node)+op+render(node.b,node); }
-  if(parent){
-    const pp=precOf(parent), cp=precOf(node); let need=false;
-    if(cp<pp) need=true;
-    else if(cp===pp && node.type!=='not'){ if(!(parent.type===node.type && parent.a===node)) need=true; }
-    if(need) s='('+s+')';
+/* ---- RENDERING ----
+   Convention: EVERY compound (binary) subformula is wrapped in its own
+   parentheses unless it is the terminal (whole) formula. Binary operators are
+   surrounded by spaces; sentence letters are italicized in HTML output. */
+function isBinary(n){ return n.type==='and'||n.type==='or'||n.type==='cond'||n.type==='iff'; }
+function renderNode(node,html){
+  if(node.type==='atom') return html? '<i>'+node.name+'</i>' : node.name;
+  if(node.type==='not'){
+    const inner=node.a;
+    if(inner.type==='atom'||inner.type==='not') return '~'+renderNode(inner,html);
+    return '~('+renderNode(inner,html)+')';
   }
-  return s;
+  const op={and:'&',or:'v',cond:'-->',iff:'<-->'}[node.type];
+  return renderPart(node.a,html)+' '+op+' '+renderPart(node.b,html);
+}
+function renderPart(node,html){
+  const s=renderNode(node,html);
+  return isBinary(node)? '('+s+')' : s;
+}
+/* plain text (for input fields, messages) */
+function render(node){ return renderNode(node,false); }
+/* HTML with italic variables (for solution box / previews) */
+function renderHTML(node){ return renderNode(node,true); }
+/* normalize any user/bank string into the house convention */
+function normalizeFormulaString(str){
+  try{ return render(parseFormula(str)); }catch(e){ return str; }
 }
 function directRewrites(node){
   const out=[]; const N=n=>({type:'not',a:n});
@@ -299,7 +315,7 @@ function checkRule(rule, concl, cites, ctx){
       const ok=(eq(c1.a,disj.a)&&eq(c2.a,disj.b)&&eq(c1.b,concl)&&eq(c2.b,concl))||
                (eq(c2.a,disj.a)&&eq(c1.a,disj.b)&&eq(c2.b,concl)&&eq(c1.b,concl));
       if(ok) return true;
-      return "Need p-->r and q-->r matching the disjuncts, both concluding this line's formula.";
+      return "Need p --> r and q --> r matching the disjuncts, both concluding this line's formula.";
     }
     case '~E': {
       if(cites.length!==1) return 'Needs exactly 1 cited line.';
@@ -368,7 +384,7 @@ function checkRule(rule, concl, cites, ctx){
         if(last.b.type==='not'&&eq(last.b.a,last.a)) contraOK=true;
         if(last.a.type==='not'&&eq(last.a.a,last.b)) contraOK=true;
       }
-      if(!contraOK) return 'Last line of the subproof must be an explicit contradiction (q&~q).';
+      if(!contraOK) return 'Last line of the subproof must be an explicit contradiction (q & ~q).';
       const want={type:'not',a:ctx.range.assum};
       if(eq(concl,want)) return true;
       return 'Expected '+render(want)+'.';
@@ -413,7 +429,6 @@ const QUESTIONS={
     {name:'Exportation 2', premises:['p-->(q-->r)'], conclusion:'(p&q)-->r'},
     {name:'Double Negation', premises:['~~p'], conclusion:'p'},
     {name:'DM and MI', premises:['~(p&~q)'], conclusion:'p-->q'}
-    
   ],
   hypothetical:[
     {name:'Contrapositive', premises:['p-->q'], conclusion:'~q-->~p'},
@@ -425,7 +440,7 @@ const QUESTIONS={
     {name:'Puzzle Challenge 2', premises:['(~b&d)-->e','b-->(~g&f)'], conclusion:'(f-->g)-->(d-->e)'},
     {name:'Indirect Proof 1', premises:['p-->q'], conclusion:'~(p&~q)'},
     {name:'Indirect Proof 2', premises:['~p'], conclusion:'p-->q'},
-    {name:'Assume unneeded antecedent', premises:['p'], conclusion:'~p-->q'}
+    {name:'Hypothesize unneeded antecedent', premises:['p'], conclusion:'~p-->q'}
   ],
   theorem:[
     {name:'Law of Excluded Middle', premises:[], conclusion:'pv~p'},
@@ -470,9 +485,23 @@ function loadSelectedQuestion(){
   const cat=document.getElementById('catSelect').value;
   const i=+document.getElementById('qSelect').value;
   const q=QUESTIONS[cat][i];
-  document.getElementById('premisesInput').value=q.premises.join(', ');
-  document.getElementById('concInput').value=q.conclusion;
+  document.getElementById('premisesInput').value=q.premises.map(normalizeFormulaString).join(', ');
+  document.getElementById('concInput').value=normalizeFormulaString(q.conclusion);
   startProof();
+}
+function updateArgPreview(){
+  const prev=document.getElementById('argPreview');
+  if(!prev) return;
+  const premStr=document.getElementById('premisesInput').value.trim();
+  const concStr=document.getElementById('concInput').value.trim();
+  const prems=premStr? premStr.split(',').map(s=>s.trim()).filter(Boolean):[];
+  let html='';
+  try{
+    const pHtml=prems.map(p=>renderHTML(parseFormula(p))).join(', ');
+    const cHtml=concStr? renderHTML(parseFormula(concStr)) : '';
+    if(pHtml||cHtml) html=(pHtml? pHtml+' &nbsp;&nbsp; ':'')+'∴ '+cHtml;
+  }catch(e){ html=''; }
+  prev.innerHTML=html;
 }
 function startProof(){
   currentSolution=null;
@@ -484,12 +513,19 @@ function startProof(){
   let bad=null;
   premises.forEach(p=>{
     let ast=null; try{ ast=parseFormula(p); }catch(e){ bad=p+' — '+e.message; }
-    lines.push({formula:p, ast:ast, rule:'Premise', citesText:'', level:0, isAssumption:false, locked:true, ok:!!ast, error: ast?'':('Parse error: '+ (bad||'')) });
+    lines.push({formula: ast? render(ast) : p, ast:ast, rule:'Assumption', citesText:'', level:0, isAssumption:false, locked:true, ok:!!ast, error: ast?'':('Parse error: '+ (bad||'')) });
   });
+  /* normalize the displayed argument to the house convention */
+  if(!bad){
+    document.getElementById('premisesInput').value=lines.map(l=>l.formula).join(', ');
+    const c=document.getElementById('concInput');
+    c.value=normalizeFormulaString(c.value.trim());
+  }
+  updateArgPreview();
   document.getElementById('proofArea').innerHTML='';
   renderLines();
   const msg=document.getElementById('msgBox'); msg.className='';
-  msg.textContent = bad ? ('Loaded with a problem in a premise: '+bad) : 'Proof started. Use "Add Line" to derive new lines, "Assume" to open a subproof, and "Discharge" to close it (for -->I / ~I). Then press "Check My Work".';
+  msg.textContent = bad ? ('Loaded with a problem in an assumption: '+bad) : 'Proof started. Use "Add Line" to derive new lines, "Hypothesis" to open a subproof, and "Discharge" to close it (for -->I / ~I). Then press "Check My Work".';
 }
 function addLine(){
   lines.push({formula:'', rule:'', citesText:'', level:currentLevel(), isAssumption:false, locked:false});
@@ -497,7 +533,7 @@ function addLine(){
 }
 function assumeLine(){
   const lvl=currentLevel()+1;
-  lines.push({formula:'', rule:'Assume', citesText:'', level:lvl, isAssumption:true, locked:false});
+  lines.push({formula:'', rule:'Hypothesis', citesText:'', level:lvl, isAssumption:true, locked:false});
   openSubs.push({startIndex:lines.length-1});
   renderLines();
 }
@@ -537,12 +573,12 @@ function renderLines(){
     const fInput=document.createElement('input');
     fInput.type='text'; fInput.className='formulaInput'+(ln.isAssumption?' assumeInput':'')+(ln.locked?' locked':'');
     fInput.value=ln.formula; fInput.disabled=!!ln.locked;
-    fInput.placeholder=ln.isAssumption?'assumption formula':'formula';
+    fInput.placeholder=ln.isAssumption?'hypothesis formula':'formula';
     fInput.oninput=(e)=>updateFormula(i,e.target.value);
     row.appendChild(fInput);
     const ruleSel=document.createElement('select'); ruleSel.className='ruleSelect';
-    if(ln.locked){ ruleSel.innerHTML='<option>Premise</option>'; ruleSel.disabled=true; }
-    else if(ln.isAssumption){ ruleSel.innerHTML='<option>Assume</option>'; ruleSel.disabled=true; }
+    if(ln.locked){ ruleSel.innerHTML='<option>Assumption</option>'; ruleSel.disabled=true; }
+    else if(ln.isAssumption){ ruleSel.innerHTML='<option>Hypothesis</option>'; ruleSel.disabled=true; }
     else{ ruleSel.innerHTML=ruleOptionsHtml(ln.rule, ln.restrictRules); ruleSel.onchange=(e)=>updateRule(i,e.target.value); }
     row.appendChild(ruleSel);
     const citesInput=document.createElement('input');
@@ -589,7 +625,7 @@ function checkProof(){
     if(ln.locked){ ln.ok = !!ln.ast; if(!ln.ast) anyBad=true; continue; }
     if(!ln.formula || !ln.formula.trim()){ ln.error='Empty formula.'; anyBad=true; continue; }
     let ast;
-    try{ ast=parseFormula(ln.formula.trim()); ln.ast=ast; }
+    try{ ast=parseFormula(ln.formula.trim()); ln.ast=ast; ln.formula=render(ast); }
     catch(e){ ln.error='Parse error: '+e.message; anyBad=true; continue; }
     if(ln.isAssumption){ ln.ok=true; continue; }
     if(!ln.rule){ ln.error='Choose a rule for this line.'; anyBad=true; continue; }
@@ -600,8 +636,8 @@ function checkProof(){
         if(tok.range){
           const s=tok.start-1, e=tok.end-1;
           if(s<0||e>=lines.length||s>e) throw new Error('Bad subproof range.');
-          if(!lines[s].isAssumption) throw new Error('Range must start at an assumption line.');
-          if(!lines[s].ast) throw new Error('Assumption line has a parse error.');
+          if(!lines[s].isAssumption) throw new Error('Range must start at a hypothesis line.');
+          if(!lines[s].ast) throw new Error('Hypothesis line has a parse error.');
           if(!lines[e].ast) throw new Error('Last line of subproof has a parse error.');
           ctx.range={assum:lines[s].ast, last:lines[e].ast};
         } else {
@@ -653,7 +689,7 @@ function randSimpleFormula(vars, maxConn){
   }
   return build(maxConn);
 }
-function genAtomPremise(vars,cx){ const f=randSimpleFormula(vars,cx); return {formula:f, lines:[{formula:f, rule:'Premise', cites:[]}]}; }
+function genAtomPremise(vars,cx){ const f=randSimpleFormula(vars,cx); return {formula:f, lines:[{formula:f, rule:'Assumption', cites:[]}]}; }
 function mergeLines(list1, list2){
   const offset=list1.length;
   const shifted=list2.map(l=>{
@@ -710,7 +746,7 @@ function genCondE(vars,budget,rules,cx){
   const Q=randSimpleFormula(vars,cx);
   const condFormula={type:'cond',a:P.formula,b:Q};
   const lines=P.lines.slice();
-  lines.push({formula:condFormula, rule:'Premise', cites:[]});
+  lines.push({formula:condFormula, rule:'Assumption', cites:[]});
   const condIdx=lines.length-1;
   const pIdx=P.lines.length-1;
   lines.push({formula:Q, rule:'-->E', cites:[condIdx,pIdx]});
@@ -727,21 +763,21 @@ function genOrI(vars,budget,rules,cx){
 function genOrE(vars,cx){
   const A=randSimpleFormula(vars,cx),B=randSimpleFormula(vars,cx),C=randSimpleFormula(vars,cx);
   const disj={type:'or',a:A,b:B}, cond1={type:'cond',a:A,b:C}, cond2={type:'cond',a:B,b:C};
-  const lines=[{formula:disj,rule:'Premise',cites:[]},{formula:cond1,rule:'Premise',cites:[]},{formula:cond2,rule:'Premise',cites:[]}];
+  const lines=[{formula:disj,rule:'Assumption',cites:[]},{formula:cond1,rule:'Assumption',cites:[]},{formula:cond2,rule:'Assumption',cites:[]}];
   lines.push({formula:C, rule:'vE', cites:[0,1,2]});
   return {formula:C, lines};
 }
 function genNotE(vars,cx){
   const base=randSimpleFormula(vars,cx);
   const notnot={type:'not',a:{type:'not',a:base}};
-  const lines=[{formula:notnot,rule:'Premise',cites:[]}];
+  const lines=[{formula:notnot,rule:'Assumption',cites:[]}];
   lines.push({formula:base,rule:'~E',cites:[0]});
   return {formula:base, lines};
 }
 function genIffI(vars,cx){
   const P=randSimpleFormula(vars,cx), Q=randSimpleFormula(vars,cx);
   const c1={type:'cond',a:P,b:Q}, c2={type:'cond',a:Q,b:P};
-  const lines=[{formula:c1,rule:'Premise',cites:[]},{formula:c2,rule:'Premise',cites:[]}];
+  const lines=[{formula:c1,rule:'Assumption',cites:[]},{formula:c2,rule:'Assumption',cites:[]}];
   const formula={type:'iff',a:P,b:Q};
   lines.push({formula,rule:'<-->I',cites:[0,1]});
   return {formula, lines};
@@ -749,7 +785,7 @@ function genIffI(vars,cx){
 function genIffE(vars,cx){
   const P=randSimpleFormula(vars,cx), Q=randSimpleFormula(vars,cx);
   const iff={type:'iff',a:P,b:Q};
-  const lines=[{formula:iff,rule:'Premise',cites:[]}];
+  const lines=[{formula:iff,rule:'Assumption',cites:[]}];
   const dir=Math.random()<0.5;
   const formula= dir? {type:'cond',a:P,b:Q}:{type:'cond',a:Q,b:P};
   lines.push({formula,rule:'<-->E',cites:[0]});
@@ -758,7 +794,7 @@ function genIffE(vars,cx){
 function genMT(vars,cx){
   const P=randSimpleFormula(vars,cx), Q=randSimpleFormula(vars,cx);
   const cond={type:'cond',a:P,b:Q}, notq={type:'not',a:Q};
-  const lines=[{formula:cond,rule:'Premise',cites:[]},{formula:notq,rule:'Premise',cites:[]}];
+  const lines=[{formula:cond,rule:'Assumption',cites:[]},{formula:notq,rule:'Assumption',cites:[]}];
   const formula={type:'not',a:P};
   lines.push({formula,rule:'MT',cites:[0,1]});
   return {formula, lines};
@@ -766,7 +802,7 @@ function genMT(vars,cx){
 function genHS(vars,cx){
   const P=randSimpleFormula(vars,cx), Q=randSimpleFormula(vars,cx), R=randSimpleFormula(vars,cx);
   const c1={type:'cond',a:P,b:Q}, c2={type:'cond',a:Q,b:R};
-  const lines=[{formula:c1,rule:'Premise',cites:[]},{formula:c2,rule:'Premise',cites:[]}];
+  const lines=[{formula:c1,rule:'Assumption',cites:[]},{formula:c2,rule:'Assumption',cites:[]}];
   const formula={type:'cond',a:P,b:R};
   lines.push({formula,rule:'HS',cites:[0,1]});
   return {formula, lines};
@@ -774,7 +810,7 @@ function genHS(vars,cx){
 function genDS(vars,cx){
   const P=randSimpleFormula(vars,cx), Q=randSimpleFormula(vars,cx);
   const disj={type:'or',a:P,b:Q}, notp={type:'not',a:P};
-  const lines=[{formula:disj,rule:'Premise',cites:[]},{formula:notp,rule:'Premise',cites:[]}];
+  const lines=[{formula:disj,rule:'Assumption',cites:[]},{formula:notp,rule:'Assumption',cites:[]}];
   lines.push({formula:Q,rule:'DS',cites:[0,1]});
   return {formula:Q, lines};
 }
@@ -783,37 +819,37 @@ function genDM(vars,cx){
   if(Math.random()<0.5){
     const src={type:'not',a:{type:'and',a:P,b:Q}};
     const dst={type:'or',a:{type:'not',a:P},b:{type:'not',a:Q}};
-    return {formula:dst, lines:[{formula:src,rule:'Premise',cites:[]},{formula:dst,rule:'DM',cites:[0]}]};
+    return {formula:dst, lines:[{formula:src,rule:'Assumption',cites:[]},{formula:dst,rule:'DM',cites:[0]}]};
   } else {
     const src={type:'not',a:{type:'or',a:P,b:Q}};
     const dst={type:'and',a:{type:'not',a:P},b:{type:'not',a:Q}};
-    return {formula:dst, lines:[{formula:src,rule:'Premise',cites:[]},{formula:dst,rule:'DM',cites:[0]}]};
+    return {formula:dst, lines:[{formula:src,rule:'Assumption',cites:[]},{formula:dst,rule:'DM',cites:[0]}]};
   }
 }
 function genDN(vars,cx){
   const P=randSimpleFormula(vars,cx);
   const dst={type:'not',a:{type:'not',a:P}};
-  if(Math.random()<0.5) return {formula:dst, lines:[{formula:P,rule:'Premise',cites:[]},{formula:dst,rule:'DN',cites:[0]}]};
-  return {formula:P, lines:[{formula:dst,rule:'Premise',cites:[]},{formula:P,rule:'DN',cites:[0]}]};
+  if(Math.random()<0.5) return {formula:dst, lines:[{formula:P,rule:'Assumption',cites:[]},{formula:dst,rule:'DN',cites:[0]}]};
+  return {formula:P, lines:[{formula:dst,rule:'Assumption',cites:[]},{formula:P,rule:'DN',cites:[0]}]};
 }
 function genMI(vars,cx){
   const P=randSimpleFormula(vars,cx), Q=randSimpleFormula(vars,cx);
   const cond={type:'cond',a:P,b:Q}, disj={type:'or',a:{type:'not',a:P},b:Q};
-  if(Math.random()<0.5) return {formula:disj, lines:[{formula:cond,rule:'Premise',cites:[]},{formula:disj,rule:'MI',cites:[0]}]};
-  return {formula:cond, lines:[{formula:disj,rule:'Premise',cites:[]},{formula:cond,rule:'MI',cites:[0]}]};
+  if(Math.random()<0.5) return {formula:disj, lines:[{formula:cond,rule:'Assumption',cites:[]},{formula:disj,rule:'MI',cites:[0]}]};
+  return {formula:cond, lines:[{formula:disj,rule:'Assumption',cites:[]},{formula:cond,rule:'MI',cites:[0]}]};
 }
 function genTRANS(vars,cx){
   const P=randSimpleFormula(vars,cx), Q=randSimpleFormula(vars,cx);
   const cond={type:'cond',a:P,b:Q}, trans={type:'cond',a:{type:'not',a:Q},b:{type:'not',a:P}};
-  if(Math.random()<0.5) return {formula:trans, lines:[{formula:cond,rule:'Premise',cites:[]},{formula:trans,rule:'TRANS',cites:[0]}]};
-  return {formula:cond, lines:[{formula:trans,rule:'Premise',cites:[]},{formula:cond,rule:'TRANS',cites:[0]}]};
+  if(Math.random()<0.5) return {formula:trans, lines:[{formula:cond,rule:'Assumption',cites:[]},{formula:trans,rule:'TRANS',cites:[0]}]};
+  return {formula:cond, lines:[{formula:trans,rule:'Assumption',cites:[]},{formula:cond,rule:'TRANS',cites:[0]}]};
 }
 function genEXP(vars,cx){
   const P=randSimpleFormula(vars,cx), Q=randSimpleFormula(vars,cx), R=randSimpleFormula(vars,cx);
   const src={type:'cond',a:{type:'and',a:P,b:Q},b:R};
   const dst={type:'cond',a:P,b:{type:'cond',a:Q,b:R}};
-  if(Math.random()<0.5) return {formula:dst, lines:[{formula:src,rule:'Premise',cites:[]},{formula:dst,rule:'EXP',cites:[0]}]};
-  return {formula:src, lines:[{formula:dst,rule:'Premise',cites:[]},{formula:src,rule:'EXP',cites:[0]}]};
+  if(Math.random()<0.5) return {formula:dst, lines:[{formula:src,rule:'Assumption',cites:[]},{formula:dst,rule:'EXP',cites:[0]}]};
+  return {formula:src, lines:[{formula:dst,rule:'Assumption',cites:[]},{formula:src,rule:'EXP',cites:[0]}]};
 }
 function extendWithRandomStep(prev,vars,rules,cx){
   const choice=pickRandom(['and','condE','or']);
@@ -828,7 +864,7 @@ function extendWithRandomStep(prev,vars,rules,cx){
   } else if(choice==='condE'){
     const Q=randSimpleFormula(vars,cx);
     const condFormula={type:'cond',a:prev.formula,b:Q};
-    lines.push({formula:condFormula, rule:'Premise', cites:[]});
+    lines.push({formula:condFormula, rule:'Assumption', cites:[]});
     const condIdx=lines.length-1;
     lines.push({formula:Q, rule:'-->E', cites:[condIdx,prevIdx]});
     return {formula:Q, lines};
@@ -841,7 +877,7 @@ function extendWithRandomStep(prev,vars,rules,cx){
 }
 function nestedStep(cur,vars,rules,cx,level){
   const nestedAssum=randSimpleFormula(vars,cx);
-  let nestedCur={formula:nestedAssum, lines:[{formula:nestedAssum, rule:'Assume', cites:[], isAssumption:true}]};
+  let nestedCur={formula:nestedAssum, lines:[{formula:nestedAssum, rule:'Hypothesis', cites:[], isAssumption:true}]};
   const nSteps=1+Math.floor(Math.random()*2);
   for(let i=0;i<nSteps;i++) nestedCur=extendWithRandomStep(nestedCur,vars,rules,cx);
   const nestedLinesLeveled=withLevel(nestedCur.lines, level+1);
@@ -857,7 +893,7 @@ function nestedStep(cur,vars,rules,cx,level){
 }
 function genConditionalSubproof(vars,rules,cx,steps,level,allowNested){
   const P=randSimpleFormula(vars,cx);
-  let cur={formula:P, lines:[{formula:P, rule:'Assume', cites:[], isAssumption:true}]};
+  let cur={formula:P, lines:[{formula:P, rule:'Hypothesis', cites:[], isAssumption:true}]};
   for(let i=0;i<steps;i++){
     if(allowNested && i===0){ cur=nestedStep(cur,vars,rules,cx,level); }
     else { cur=extendWithRandomStep(cur,vars,rules,cx); }
@@ -869,11 +905,11 @@ function genConditionalSubproof(vars,rules,cx,steps,level,allowNested){
 }
 function genNegationSubproof(vars,rules,cx,steps,level){
   const P=randSimpleFormula(vars,cx);
-  let cur={formula:P, lines:[{formula:P, rule:'Assume', cites:[], isAssumption:true}]};
+  let cur={formula:P, lines:[{formula:P, rule:'Hypothesis', cites:[], isAssumption:true}]};
   for(let i=0;i<Math.max(1,steps-1);i++) cur=extendWithRandomStep(cur,vars,rules,cx);
   const negX={type:'not', a:cur.formula};
   const lines=cur.lines.slice();
-  lines.push({formula:negX, rule:'Premise', cites:[]});
+  lines.push({formula:negX, rule:'Assumption', cites:[]});
   const negIdx=lines.length-1;
   const curFinalIdx=cur.lines.length-1;
   const contra={type:'and', a:cur.formula, b:negX};
@@ -885,8 +921,8 @@ function genNegationSubproof(vars,rules,cx,steps,level){
 }
 function finalizeGlobalOrder(rawLines){
   const tagged=rawLines.map((l,i)=>Object.assign({},l,{_id:i}));
-  const premises=tagged.filter(l=>l.rule==='Premise');
-  const others=tagged.filter(l=>l.rule!=='Premise');
+  const premises=tagged.filter(l=>l.rule==='Assumption');
+  const others=tagged.filter(l=>l.rule!=='Assumption');
   const keptPremises=[]; const idRemap={};
   premises.forEach(p=>{
     const dup=keptPremises.find(k=>eq(k.formula,p.formula));
@@ -896,7 +932,7 @@ function finalizeGlobalOrder(rawLines){
   const idToNewIdx={};
   finalOrder.forEach((l,i)=>{ idToNewIdx[l._id]=i; });
   return finalOrder.map(l=>{
-    const nl={formula:l.formula, rule:l.rule, level: l.rule==='Premise'?0:l.level, isAssumption:l.isAssumption||false};
+    const nl={formula:l.formula, rule:l.rule, level: l.rule==='Assumption'?0:l.level, isAssumption:l.isAssumption||false};
     if(l.cites) nl.cites=l.cites.map(c=> idToNewIdx[ idRemap[c]!==undefined? idRemap[c]:c ]);
     if(l.rangeStart!==undefined){
       nl.rangeStart=idToNewIdx[ idRemap[l.rangeStart]!==undefined? idRemap[l.rangeStart]:l.rangeStart ];
@@ -908,7 +944,7 @@ function finalizeGlobalOrder(rawLines){
 function verifyGeneratedLines(finalLines){
   for(let i=0;i<finalLines.length;i++){
     const ln=finalLines[i];
-    if(ln.rule==='Premise'||ln.isAssumption) continue;
+    if(ln.rule==='Assumption'||ln.isAssumption) continue;
     let ctx={}, citedFormulas=[];
     if(ln.rangeStart!==undefined){ ctx.range={assum:finalLines[ln.rangeStart].formula, last:finalLines[ln.rangeEnd].formula}; }
     else { citedFormulas=(ln.cites||[]).map(idx=>finalLines[idx].formula); }
@@ -939,7 +975,7 @@ function generateBasicDerivedEquivalence(category, difficulty){
   const finalLines=finalizeGlobalOrder(leveled);
   const verified=verifyGeneratedLines(finalLines);
   if(!verified.ok) return null;
-  const premises=finalLines.filter(l=>l.rule==='Premise').map(l=>render(l.formula));
+  const premises=finalLines.filter(l=>l.rule==='Assumption').map(l=>render(l.formula));
   const conclusion=render(finalLines[finalLines.length-1].formula);
   return {premises, conclusion, solutionLines: finalLines};
 }
@@ -966,14 +1002,14 @@ function generateHypothetical(difficulty){
   const finalLines=finalizeGlobalOrder(combinedLines);
   const verified=verifyGeneratedLines(finalLines);
   if(!verified.ok) return null;
-  const premises=finalLines.filter(l=>l.rule==='Premise').map(l=>render(l.formula));
+  const premises=finalLines.filter(l=>l.rule==='Assumption').map(l=>render(l.formula));
   const conclusion=render(finalLines[finalLines.length-1].formula);
   return {premises, conclusion, solutionLines: finalLines};
 }
 function tIdentity(vars){
   const P=randSimpleFormula(vars,0);
   const lines=[
-    {formula:P, rule:'Assume', cites:[], isAssumption:true, level:1},
+    {formula:P, rule:'Hypothesis', cites:[], isAssumption:true, level:1},
     {formula:{type:'cond',a:P,b:P}, rule:'-->I', rangeStart:0, rangeEnd:0, level:0}
   ];
   return {lines};
@@ -982,7 +1018,7 @@ function tNonContra(vars){
   const P=randSimpleFormula(vars,0);
   const assumF={type:'and',a:P,b:{type:'not',a:P}};
   const lines=[
-    {formula:assumF, rule:'Assume', cites:[], isAssumption:true, level:1},
+    {formula:assumF, rule:'Hypothesis', cites:[], isAssumption:true, level:1},
     {formula:{type:'not',a:assumF}, rule:'~I', rangeStart:0, rangeEnd:0, level:0}
   ];
   return {lines};
@@ -991,7 +1027,7 @@ function tConjSimp(vars){
   const P=randSimpleFormula(vars,0), Q=randSimpleFormula(vars,0);
   const assumF={type:'and',a:P,b:Q};
   const lines=[
-    {formula:assumF, rule:'Assume', cites:[], isAssumption:true, level:1},
+    {formula:assumF, rule:'Hypothesis', cites:[], isAssumption:true, level:1},
     {formula:P, rule:'&E', cites:[0], level:1},
     {formula:{type:'cond',a:assumF,b:P}, rule:'-->I', rangeStart:0, rangeEnd:1, level:0}
   ];
@@ -1000,8 +1036,8 @@ function tConjSimp(vars){
 function tCurryAnd(vars){
   const P=randSimpleFormula(vars,0), Q=randSimpleFormula(vars,0);
   const lines=[
-    {formula:P, rule:'Assume', cites:[], isAssumption:true, level:1},
-    {formula:Q, rule:'Assume', cites:[], isAssumption:true, level:2},
+    {formula:P, rule:'Hypothesis', cites:[], isAssumption:true, level:1},
+    {formula:Q, rule:'Hypothesis', cites:[], isAssumption:true, level:2},
     {formula:{type:'and',a:P,b:Q}, rule:'&I', cites:[0,1], level:2}
   ];
   lines.push({formula:{type:'cond',a:Q,b:{type:'and',a:P,b:Q}}, rule:'-->I', rangeStart:1, rangeEnd:2, level:1});
@@ -1014,7 +1050,7 @@ function tLEM(vars){
   const assumF={type:'not', a:goal};
   const dm={type:'and', a:{type:'not',a:P}, b:{type:'not',a:{type:'not',a:P}}};
   const lines=[
-    {formula:assumF, rule:'Assume', cites:[], isAssumption:true, level:1},
+    {formula:assumF, rule:'Hypothesis', cites:[], isAssumption:true, level:1},
     {formula:dm, rule:'DM', cites:[0], level:1},
     {formula:{type:'not',a:P}, rule:'&E', cites:[1], level:1},
     {formula:{type:'not',a:{type:'not',a:P}}, rule:'&E', cites:[1], level:1},
@@ -1031,9 +1067,9 @@ function tTransposition(vars){
   const PQ={type:'cond',a:P,b:Q};
   const notQ={type:'not',a:Q};
   const lines=[
-    {formula:PQ, rule:'Assume', cites:[], isAssumption:true, level:1},
-    {formula:notQ, rule:'Assume', cites:[], isAssumption:true, level:2},
-    {formula:P, rule:'Assume', cites:[], isAssumption:true, level:3},
+    {formula:PQ, rule:'Hypothesis', cites:[], isAssumption:true, level:1},
+    {formula:notQ, rule:'Hypothesis', cites:[], isAssumption:true, level:2},
+    {formula:P, rule:'Hypothesis', cites:[], isAssumption:true, level:3},
     {formula:Q, rule:'-->E', cites:[0,2], level:3},
     {formula:{type:'and',a:Q,b:notQ}, rule:'&I', cites:[3,1], level:3}
   ];
@@ -1090,7 +1126,7 @@ function generateRandomProblem(){
   document.getElementById('showSolBtn').style.display='inline-block';
   document.getElementById('solutionBox').style.display='none';
   msg.className='';
-  msg.textContent='Random Problem #'+generatedCounter+' generated — Category: '+category+', Difficulty: '+difficulty+'/5. Premises and conclusion loaded below.';
+  msg.textContent='Random Problem #'+generatedCounter+' generated — Category: '+category+', Difficulty: '+difficulty+'/5. Assumptions and conclusion loaded below.';
 }
 function toggleSolution(){
   const box=document.getElementById('solutionBox');
@@ -1103,12 +1139,14 @@ function renderSolutionHTML(sol){
   sol.forEach((l,i)=>{
     const indent='&nbsp;&nbsp;&nbsp;'.repeat(l.level||0);
     const cites = l.rangeStart!==undefined ? (l.rangeStart+1)+'-'+(l.rangeEnd+1) : (l.cites||[]).map(c=>c+1).join(',');
-    const ruleLabel = l.rule==='Premise'? 'Premise' : l.isAssumption? 'Assume' : (l.rule+(cites?' '+cites:''));
-    html+='<div style="font-family:ui-monospace,monospace;padding:2px 0;">'+(i+1)+'. '+indent+render(l.formula)+'&nbsp;&nbsp;<span style="color:#0064A4">['+ruleLabel+']</span></div>';
+    const ruleLabel = l.rule==='Assumption'? 'Assumption' : l.isAssumption? 'Hypothesis' : (l.rule+(cites?' '+cites:''));
+    html+='<div class="fml" style="padding:2px 0;">'+(i+1)+'. '+indent+renderHTML(l.formula)+'&nbsp;&nbsp;<span style="color:#0064A4">['+ruleLabel+']</span></div>';
   });
   return html;
 }
 /* init */
 populateQuestions();
+document.getElementById('premisesInput').addEventListener('input',updateArgPreview);
+document.getElementById('concInput').addEventListener('input',updateArgPreview);
 </script>
 </body></html>
